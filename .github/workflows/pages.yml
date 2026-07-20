@@ -29,14 +29,9 @@ jobs:
 
       - name: Prepare static site
         run: |
-          mkdir -p _site
-          cp -r . _site/
-          rm -rf _site/.git _site/.github
-          # GitHub Pages usa index.html come pagina principale.
-          # Nel repository il file principale sembra essere impero_romano.html.
-          if [ -f _site/impero_romano.html ] && [ ! -f _site/index.html ]; then
-            cp _site/impero_romano.html _site/index.html
-          fi
+          mkdir -p ../_site
+          cp -r * ../_site/
+          cp impero_romano.html ../_site/index.html
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -44,7 +39,7 @@ jobs:
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: _site
+          path: ../_site
 
       - name: Deploy to GitHub Pages
         id: deployment
