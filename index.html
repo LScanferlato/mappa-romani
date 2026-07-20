@@ -151,17 +151,65 @@ label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer;
       </label>
     </div>
     <div style="display:flex;gap:6px;align-items:center;">
-      <button id="bib-btn" title="Risorse didattiche" style="background:none;border:1px solid #c9a959;color:#c9a959;font-size:0.7rem;padding:3px 10px;border-radius:4px;cursor:pointer;transition:0.2s;font-family:'Cinzel',serif;letter-spacing:1px;white-space:nowrap;">📚 Risorse</button>
+      <button id="bib-btn" title="Informazioni, fonti e riferimenti" style="background:none;border:1px solid #c9a959;color:#c9a959;font-size:0.7rem;padding:3px 10px;border-radius:4px;cursor:pointer;transition:0.2s;font-family:'Cinzel',serif;letter-spacing:1px;white-space:nowrap;">ⓘ Info</button>
       <button id="speed-btn" title="Velocità timeline" style="background:none;border:1px solid #484f58;color:#8b949e;font-size:0.65rem;padding:2px 8px;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;letter-spacing:1px;">1×</button>
     </div>
   </div>
-  <div id="bib-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;background:#161b22;border:1px solid #c9a959;border-radius:10px;padding:20px;max-width:480px;width:90%;max-height:70vh;overflow-y:auto;box-shadow:0 16px 64px rgba(0,0,0,0.7);">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div style="font-family:'Cinzel',serif;font-size:0.9rem;color:#c9a959;letter-spacing:2px;">Risorse Didattiche</div>
-      <button id="bib-close" style="background:none;border:none;color:#8b949e;font-size:1.2rem;cursor:pointer;padding:0 4px;">✕</button>
+  <div id="bib-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;background:#161b22;border:1px solid #c9a959;border-radius:12px;padding:24px;max-width:540px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.8),0 0 0 1px rgba(201,169,89,0.05);backdrop-filter:blur(8px);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #21262d;">
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:#c9a959;letter-spacing:2px;">Informazioni</div>
+      <button id="bib-close" style="background:none;border:none;color:#8b949e;font-size:1.4rem;cursor:pointer;padding:0 6px;transition:0.2s;" onmouseover="this.style.color='#e6edf3'" onmouseout="this.style.color='#8b949e'">✕</button>
     </div>
-    <div style="font-size:0.7rem;color:#8b949e;margin-bottom:10px;">Materiali dal corso di Storia Romana — Università degli Studi di Salerno</div>
-    <div id="bib-list"></div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:0.75rem;color:#4ecca3;letter-spacing:1px;margin-bottom:6px;">MAPPA INTERATTIVA DELL'IMPERO ROMANO</div>
+      <div style="font-size:0.7rem;color:#8b949e;line-height:1.5;">
+        Evoluzione territoriale dal 753 a.C. al 1453 d.C.<br>
+        Dati geografici: OpenStreetMap · CartoDB (tema dark)<br>
+        Strade romane: Itiner-e (CC BY 4.0) · 299.000 km
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div class="info-section-header" style="font-family:'Cinzel',serif;font-size:0.7rem;color:#c9a959;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+        <span>📚</span> FONTI BIBLIOGRAFICHE
+        <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,89,0.3),transparent);"></span>
+      </div>
+      <div id="bib-list"></div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div class="info-section-header" style="font-family:'Cinzel',serif;font-size:0.7rem;color:#c9a959;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+        <span>👑</span> BIOGRAFIE IMPERATORI
+        <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,89,0.3),transparent);"></span>
+      </div>
+      <div style="font-size:0.7rem;color:#8b949e;line-height:1.5;">
+        Le biografie degli imperatori sono tratte da<br>
+        <a href="https://storieromane.altervista.org/biografie/eta-imperiale/" target="_blank" rel="noopener" style="color:#4ecca3;text-decoration:none;border-bottom:1px dotted rgba(78,204,163,0.3);">Storie Romane — L'età imperiale</a>
+        <span style="color:#484f58;"> · Oltre 50 biografie dettagliate</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div class="info-section-header" style="font-family:'Cinzel',serif;font-size:0.7rem;color:#c9a959;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+        <span>🌐</span> LINK UTILI
+        <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,89,0.3),transparent);"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <a href="https://www.itiner-e.org" target="_blank" rel="noopener" style="color:#e6edf3;text-decoration:none;font-size:0.7rem;padding:4px 6px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(201,169,89,0.08)'" onmouseout="this.style.background='transparent'">Itiner-e — Mappa delle strade romane</a>
+        <a href="https://doi.org/10.1038/s41597-025-06140-z" target="_blank" rel="noopener" style="color:#e6edf3;text-decoration:none;font-size:0.7rem;padding:4px 6px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(201,169,89,0.08)'" onmouseout="this.style.background='transparent'">Itiner-e su Nature Scientific Data (2025)</a>
+        <a href="https://doi.org/10.5281/zenodo.17122148" target="_blank" rel="noopener" style="color:#e6edf3;text-decoration:none;font-size:0.7rem;padding:4px 6px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(201,169,89,0.08)'" onmouseout="this.style.background='transparent'">Dataset Itiner-e su Zenodo</a>
+        <a href="https://www.straderomane.it/it/le-strade/" target="_blank" rel="noopener" style="color:#e6edf3;text-decoration:none;font-size:0.7rem;padding:4px 6px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(201,169,89,0.08)'" onmouseout="this.style.background='transparent'">Gruppo Amici delle Strade Romane</a>
+        <a href="https://storieromane.altervista.org/" target="_blank" rel="noopener" style="color:#e6edf3;text-decoration:none;font-size:0.7rem;padding:4px 6px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(201,169,89,0.08)'" onmouseout="this.style.background='transparent'">Storie Romane — Divulgazione storica</a>
+      </div>
+    </div>
+
+    <div style="padding-top:10px;border-top:1px solid #21262d;">
+      <div style="font-size:0.65rem;color:#484f58;text-align:center;line-height:1.5;">
+        Tutti gli eventi della timeline sono linkati a <a href="https://it.wikipedia.org" target="_blank" rel="noopener" style="color:#8b949e;text-decoration:none;">Wikipedia</a>.<br>
+        Mappa realizzata con <a href="https://leafletjs.com" target="_blank" rel="noopener" style="color:#8b949e;text-decoration:none;">Leaflet</a> · Dati: OpenStreetMap · Itiner-e · UNISA
+      </div>
+    </div>
   </div>
 </div>
 
