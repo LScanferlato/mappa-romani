@@ -11,74 +11,98 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0d1117; color: #e6edf3; overflow: hidden; height: 100vh; }
-#container { display: flex; height: 100vh; flex-direction: column; }
-#header { background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #0d1117 100%); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #c9a959; z-index: 1000; position: relative; }
+body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0f17; color: #e6edf3; overflow: hidden; height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(201,169,89,0.03) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(78,204,163,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+#container { display: flex; height: 100vh; flex-direction: column; position: relative; z-index: 1; }
+#header { background: linear-gradient(135deg, #0d1117 0%, rgba(22,27,37,0.95) 40%, #0d1117 100%); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #c9a959; z-index: 1000; position: relative; backdrop-filter: blur(12px); }
 #header::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #c9a959, transparent); }
+#header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,169,89,0.3), transparent); }
 #header .brand { display: flex; align-items: center; gap: 14px; }
-#header .spqr { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #c9a959; font-weight: 900; letter-spacing: 6px; line-height: 1; opacity: 0.85; }
+#header .spqr { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #c9a959; font-weight: 900; letter-spacing: 6px; line-height: 1; opacity: 0.85; text-shadow: 0 0 30px rgba(201,169,89,0.15); }
 #header .title-group { display: flex; flex-direction: column; }
 #header h1 { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: #e6edf3; }
 #header h1 span { color: #c9a959; font-weight: 700; }
 #header .subtitle { font-size: 0.7rem; color: #8b949e; letter-spacing: 2px; text-transform: uppercase; }
-#header .era-badge { font-family: 'Cinzel', serif; font-size: 0.7rem; padding: 4px 14px; border-radius: 12px; border: 1px solid; background: rgba(0,0,0,0.3); text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-.era-badge.regnum { color: #e94560; border-color: #e94560; }
-.era-badge.respublica { color: #c9a959; border-color: #c9a959; }
-.era-badge.imperium { color: #4ecca3; border-color: #4ecca3; }
-.era-badge.byzantium { color: #a855f7; border-color: #a855f7; }
-#map { flex: 1; box-shadow: inset 0 0 60px rgba(0,0,0,0.3); }
-#controls { background: linear-gradient(180deg, rgba(13,17,23,0.95) 0%, rgba(22,27,37,0.98) 100%); padding: 10px 24px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #c9a959; z-index: 1000; flex-wrap: wrap; backdrop-filter: blur(8px); }
+#header .era-badge { font-family: 'Cinzel', serif; font-size: 0.7rem; padding: 4px 14px; border-radius: 12px; border: 1px solid; background: rgba(0,0,0,0.3); text-transform: uppercase; letter-spacing: 2px; transition: all 0.4s ease; backdrop-filter: blur(4px); }
+#header .era-badge:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.era-badge.regnum { color: #e94560; border-color: #e94560; box-shadow: inset 0 0 20px rgba(233,69,96,0.05); }
+.era-badge.respublica { color: #c9a959; border-color: #c9a959; box-shadow: inset 0 0 20px rgba(201,169,89,0.05); }
+.era-badge.imperium { color: #4ecca3; border-color: #4ecca3; box-shadow: inset 0 0 20px rgba(78,204,163,0.05); }
+.era-badge.byzantium { color: #a855f7; border-color: #a855f7; box-shadow: inset 0 0 20px rgba(168,85,247,0.05); }
+#emperor-badge { font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 3px 12px; border-radius: 10px; border: 1px solid rgba(78,204,163,0.3); background: rgba(78,204,163,0.08); color: #4ecca3; letter-spacing: 1px; white-space: nowrap; transition: all 0.4s ease; display: none; backdrop-filter: blur(4px); }
+#emperor-badge.visible { display: inline-block; animation: fadeInUp 0.3s ease-out; }
+#emperor-badge:hover { background: rgba(78,204,163,0.15); border-color: #4ecca3; transform: translateY(-1px); }
+#emperor-badge .emperor-name { font-weight: 700; }
+#emperor-badge .emperor-dynasty { color: #8b949e; }
+#map { flex: 1; box-shadow: inset 0 0 80px rgba(0,0,0,0.4); }
+#controls { background: linear-gradient(180deg, rgba(13,17,23,0.97) 0%, rgba(22,27,37,0.99) 100%); padding: 10px 24px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #c9a959; z-index: 1000; flex-wrap: wrap; backdrop-filter: blur(12px); position: relative; }
+#controls::before { content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,169,89,0.2), transparent); }
 #controls label { font-size: 0.78rem; color: #c9a959; white-space: nowrap; }
-#event-display { font-size: 0.72rem; color: #ffd700; flex: 1; min-width: 180px; text-align: center; line-height: 1.4; padding: 4px 12px; background: rgba(201,169,89,0.06); border: 1px solid rgba(201,169,89,0.12); border-radius: 6px; transition: 0.3s; }
-#year-display { font-size: 1.5rem; font-weight: 700; min-width: 110px; text-align: center; font-family: 'Cinzel', serif; letter-spacing: 1px; }
+#event-display { font-size: 0.72rem; color: #ffd700; flex: 1; min-width: 180px; text-align: center; line-height: 1.4; padding: 5px 14px; background: linear-gradient(135deg, rgba(201,169,89,0.08), rgba(201,169,89,0.03)); border: 1px solid rgba(201,169,89,0.15); border-radius: 8px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+#event-display::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.03), transparent); opacity: 0; transition: 0.5s; }
+#event-display.has-event::before { opacity: 1; }
+#year-display { font-size: 1.5rem; font-weight: 700; min-width: 110px; text-align: center; font-family: 'Cinzel', serif; letter-spacing: 1px; transition: color 0.4s ease; }
 #year-display.bc { color: #e94560; text-shadow: 0 0 20px rgba(233,69,96,0.2); }
 #year-display.ad { color: #4ecca3; text-shadow: 0 0 20px rgba(78,204,163,0.2); }
-#year-slider { flex: 1; min-width: 180px; height: 4px; -webkit-appearance: none; appearance: none; background: linear-gradient(90deg, #e94560 0%, #c9a959 30%, #4ecca3 100%); border-radius: 2px; outline: none; cursor: pointer; }
-#year-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #e6edf3; border: 3px solid #c9a959; cursor: pointer; transition: 0.2s; box-shadow: 0 0 12px rgba(201,169,89,0.3); }
-#year-slider::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 0 20px rgba(201,169,89,0.5); }
-#year-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #e6edf3; border: 3px solid #c9a959; cursor: pointer; }
-#city-count { font-size: 0.78rem; color: #8b949e; white-space: nowrap; letter-spacing: 0.5px; }
+#year-display.byz { color: #a855f7; text-shadow: 0 0 20px rgba(168,85,247,0.2); }
+#year-slider { flex: 1; min-width: 180px; height: 4px; -webkit-appearance: none; appearance: none; background: linear-gradient(90deg, #e94560 0%, #c9a959 30%, #4ecca3 70%, #a855f7 100%); border-radius: 2px; outline: none; cursor: pointer; transition: opacity 0.3s; }
+#year-slider:hover { opacity: 0.9; }
+#year-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e6edf3, #c0c8d8); border: 3px solid #c9a959; cursor: pointer; transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 15px rgba(201,169,89,0.3), 0 2px 8px rgba(0,0,0,0.3); }
+#year-slider::-webkit-slider-thumb:hover { transform: scale(1.25); box-shadow: 0 0 25px rgba(201,169,89,0.5), 0 4px 12px rgba(0,0,0,0.4); }
+#year-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e6edf3, #c0c8d8); border: 3px solid #c9a959; cursor: pointer; box-shadow: 0 0 15px rgba(201,169,89,0.3); }
+#city-count { font-size: 0.78rem; color: #8b949e; white-space: nowrap; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 4px; transition: 0.3s; }
 #city-count span { color: #c9a959; font-weight: 700; }
-.leaflet-container { background: #0d1117; }
-.leaflet-popup-content-wrapper { background: #161b22; color: #e6edf3; border: 1px solid #c9a959; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
-.leaflet-popup-tip { background: #161b22; border: 1px solid #c9a959; }
-.leaflet-popup-content { margin: 12px 16px; font-size: 0.85rem; }
+.leaflet-container { background: #0b0f17; }
+.leaflet-popup-content-wrapper { background: rgba(22,27,37,0.97); color: #e6edf3; border: 1px solid rgba(201,169,89,0.4); border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,169,89,0.05); backdrop-filter: blur(8px); }
+.leaflet-popup-tip { background: #161b22; border: 1px solid rgba(201,169,89,0.4); }
+.leaflet-popup-content { margin: 14px 18px; font-size: 0.85rem; }
 .leaflet-popup-content h3 { font-family: 'Cinzel', serif; color: #c9a959; margin-bottom: 4px; font-size: 0.95rem; letter-spacing: 1px; }
 .leaflet-popup-content .year-info { color: #8b949e; font-size: 0.75rem; }
 .year-info .founded { color: #4ecca3; }
 .year-info .conquered { color: #e94560; }
-.leaflet-control-zoom a { background: #161b22 !important; color: #e6edf3 !important; border-color: #c9a959 !important; transition: 0.2s !important; }
-.leaflet-control-zoom a:hover { background: #1c2333 !important; }
-.road-label { background: none !important; border: none !important; font-size: 0.65rem; color: #c9a959; font-weight: 600; text-shadow: 0 0 4px #000, 0 0 8px #000; white-space: nowrap; pointer-events: none; opacity: 0.65; letter-spacing: 1px; }
-.road-label div { background: rgba(0,0,0,0.5); padding: 1px 5px; border-radius: 3px; }
+.leaflet-control-zoom a { background: rgba(22,27,37,0.9) !important; color: #e6edf3 !important; border-color: rgba(201,169,89,0.3) !important; transition: 0.2s !important; backdrop-filter: blur(4px) !important; }
+.leaflet-control-zoom a:hover { background: #1c2333 !important; border-color: #c9a959 !important; }
+.road-label { background: none !important; border: none !important; font-size: 0.65rem; color: #c9a959; font-weight: 600; text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 12px #000; white-space: nowrap; pointer-events: none; opacity: 0.7; letter-spacing: 1px; transition: opacity 0.3s; }
+.road-label div { background: rgba(0,0,0,0.6); padding: 1px 5px; border-radius: 3px; backdrop-filter: blur(2px); }
 .site-marker { background: none !important; border: none !important; }
-.site-marker div { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: 0.2s; cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.4); }
-.site-marker div:hover { transform: scale(1.25); filter: brightness(1.2); }
+.site-marker div { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3); }
+.site-marker div:hover { transform: scale(1.35); filter: brightness(1.3); box-shadow: 0 0 20px rgba(0,0,0,0.6); }
 label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer; }
-#play-btn { background: #c9a959; border: none; color: #0d1117; font-size: 0.9rem; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; line-height: 1; }
-#play-btn:hover { transform: scale(1.12); background: #d4b86a; box-shadow: 0 0 20px rgba(201,169,89,0.3); }
-#play-btn.playing { background: #e94560; box-shadow: 0 0 20px rgba(233,69,96,0.3); }
-#play-btn.playing:hover { background: #f05454; }
+#play-btn { background: linear-gradient(135deg, #c9a959, #b8943e); border: none; color: #0d1117; font-size: 0.9rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; line-height: 1; box-shadow: 0 2px 8px rgba(201,169,89,0.2); }
+#play-btn:hover { transform: scale(1.12); background: linear-gradient(135deg, #d4b86a, #c9a959); box-shadow: 0 0 25px rgba(201,169,89,0.3), 0 4px 12px rgba(0,0,0,0.3); }
+#play-btn.playing { background: linear-gradient(135deg, #e94560, #d6384f); box-shadow: 0 0 25px rgba(233,69,96,0.3); }
+#play-btn.playing:hover { background: linear-gradient(135deg, #f05454, #e94560); }
 .province-label { background: none !important; border: none !important; }
 #bib-panel::-webkit-scrollbar { width: 6px; }
 #bib-panel::-webkit-scrollbar-track { background: #0d1117; }
 #bib-panel::-webkit-scrollbar-thumb { background: #c9a959; border-radius: 3px; }
+#bib-panel::-webkit-scrollbar-thumb:hover { background: #d4b86a; }
 .slider-labels { display: flex; justify-content: space-between; width: 100%; font-size: 0.6rem; color: #484f58; margin-top: 2px; padding: 0 2px; }
+.slider-labels span { transition: color 0.4s; }
+.slider-labels span.active { color: #c9a959; }
 .slider-wrapper { flex: 1; min-width: 180px; display: flex; flex-direction: column; }
-.legend { background: rgba(22,27,37,0.92); border: 1px solid #c9a959; border-radius: 10px; padding: 12px 16px; font-size: 0.7rem; max-width: 210px; backdrop-filter: blur(4px); box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
-.legend-title { font-family: 'Cinzel', serif; color: #c9a959; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; }
-.legend-item { color: #e6edf3; margin: 3px 0; display: flex; align-items: center; gap: 6px; }
-.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.legend-icon { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; align-items: center; justify-content: center; color: #fff; font-size: 10px; flex-shrink: 0; }
-.legend-line { display: inline-block; width: 22px; height: 2px; opacity: 0.6; flex-shrink: 0; }
-.legend hr { border: none; border-top: 1px solid #21262d; margin: 6px 0; }
+.legend { background: rgba(22,27,37,0.93); border: 1px solid rgba(201,169,89,0.3); border-radius: 12px; padding: 14px 18px; font-size: 0.7rem; max-width: 220px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,169,89,0.05); transition: 0.3s; }
+.legend:hover { border-color: rgba(201,169,89,0.5); box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+.legend-title { font-family: 'Cinzel', serif; color: #c9a959; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; display: flex; align-items: center; gap: 8px; }
+.legend-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,169,89,0.3), transparent); }
+.legend-item { color: #e6edf3; margin: 4px 0; display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.legend-item:hover { color: #fff; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 6px rgba(255,255,255,0.05); }
+.legend-icon { display: inline-flex; width: 20px; height: 20px; border-radius: 50%; align-items: center; justify-content: center; color: #fff; font-size: 10px; flex-shrink: 0; }
+.legend-line { display: inline-block; width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+.legend hr { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 8px 0; }
 .checkbox-group { display: flex; gap: 10px; align-items: center; }
-.checkbox-item { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: #c9a959; white-space: nowrap; padding: 3px 8px; border-radius: 4px; transition: 0.2s; }
-.checkbox-item:hover { background: rgba(201,169,89,0.08); }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-#event-display.has-event { animation: fadeInUp 0.3s ease-out; }
-@keyframes pulseGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
-#year-display.bc.ad { animation: pulseGlow 2s infinite; }
+.checkbox-item { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: #c9a959; white-space: nowrap; padding: 4px 10px; border-radius: 6px; transition: all 0.2s ease; border: 1px solid transparent; }
+.checkbox-item:hover { background: rgba(201,169,89,0.08); border-color: rgba(201,169,89,0.12); }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+#event-display.has-event { animation: fadeInUp 0.35s ease-out; }
+@keyframes pulseGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+#year-display.pulse { animation: pulseGlow 2s infinite; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+.circle-marker { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.circle-marker:hover { filter: brightness(1.2); }
+#speed-btn { background: rgba(201,169,89,0.08); border: 1px solid rgba(201,169,89,0.15); color: #c9a959; font-size: 0.65rem; padding: 3px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600; letter-spacing: 0.5px; }
+#speed-btn:hover { background: rgba(201,169,89,0.15); border-color: rgba(201,169,89,0.3); transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -94,6 +118,7 @@ label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer;
     <div style="display:flex;align-items:center;gap:16px;">
       <div id="era-badge" class="era-badge imperium">Impero</div>
       <div id="dynasty-badge" class="era-badge imperium" style="display:none;font-size:0.6rem;padding:2px 10px;">Giulio-Claudia</div>
+      <div id="emperor-badge" class="era-badge"></div>
       <div style="font-size:0.7rem;color:#484f58;text-align:right;line-height:1.3;">Trascina lo slider<br>per esplorare i secoli</div>
     </div>
   </div>
@@ -660,173 +685,231 @@ const bibliography = [
   { title: "Via Francigena in Toscana (tracciato GPX)", url: "https://www.hikingtuscany.com/it/via-francigena/", note: "Percorso della Via Francigena nel tratto toscano" },
   { title: "Strade Romane — Catalogo delle strade", url: "https://www.straderomane.it/it/le-strade/", note: "Gruppo Amici delle Strade Romane — Oltre 80 itinerari" },
   { title: "Straderomane — Mappa interattiva (uMap)", url: "https://umap.openstreetmap.fr/it/map/straderomane_682640", note: "Percorsi GPS delle strade romane" },
+  { title: "Storie Romane — Biografie dell'età imperiale", url: "https://storieromane.altervista.org/biografie/eta-imperiale/", note: "Biografie di tutti gli imperatori romani" },
 ];
 
 const romanEvents = [
-  { year: -753, event: "Fondazione di Roma (Romolo)" },
-  { year: -617, event: "Inizio monarchia etrusca — Tarquinio Prisco re" },
-  { year: -578, event: "Riforme di Servio Tullio — Mura serviane, comizi centuriati" },
-  { year: -535, event: "Tarquinio il Superbo — Ultimo re di Roma" },
-  { year: -509, event: "Cacciata dei Tarquini — Nascita della Repubblica" },
-  { year: -508, event: "Istituzione del pontifex maximus" },
-  { year: -496, event: "Battaglia del Lago Regillo — Roma sconfigge i Latini" },
-  { year: -494, event: "Prima secessione della plebe — Istituzione tribuni della plebe" },
-  { year: -493, event: "Foedus Cassianum — Trattato di alleanza con i Latini" },
-  { year: -451, event: "Leggi delle XII Tavole — Prime leggi scritte di Roma" },
-  { year: -445, event: "Lex Canuleia — Consentiti i matrimoni tra patrizi e plebei" },
-  { year: -396, event: "Conquista di Veio — Roma espande il dominio in Etruria" },
-  { year: -390, event: "Sacco di Roma da parte dei Galli Senoni" },
-  { year: -367, event: "Leggi Licinie-Sestie — Patrizi e plebei condividono il consolato" },
-  { year: -338, event: "Roma scioglie la Lega Latina — Controllo diretto sul Lazio" },
-  { year: -326, event: "Lex Poetelia-Papiria — Abolita la schiavitù per debiti" },
-  { year: -312, event: "Inizio costruzione della Via Appia" },
-  { year: -343, event: "Inizio guerre sannitiche" },
-  { year: -300, event: "Lex Ogulnia — Plebei ammessi ai collegi sacerdotali" },
-  { year: -290, event: "Fine guerre sannitiche — Roma domina l'Italia centrale" },
-  { year: -275, event: "Battaglia di Benevento — Pirro lascia l'Italia" },
-  { year: -264, event: "Inizio Prima Guerra Punica" },
-  { year: -260, event: "Battaglia di Milazzo — Prima vittoria navale romana" },
-  { year: -241, event: "Fine Prima Guerra Punica — Roma conquista Sicilia" },
-  { year: -240, event: "📖 Livio Andronico — Odusia (prima opera letteraria latina)" },
-  { year: -238, event: "Annessione di Sardegna e Corsica" },
-  { year: -235, event: "📖 Gneo Nevio — Bellum Punicum (poema epico)" },
-  { year: -218, event: "Annibale attraversa le Alpi — Inizio II Guerra Punica" },
-  { year: -216, event: "Battaglia di Canne" },
-  { year: -204, event: "📖 Quinto Ennio — Annales (poema epico nazionale)" },
-  { year: -202, event: "Battaglia di Zama — Sconfitta di Annibale" },
-  { year: -197, event: "La Spagna diventa provincia romana" },
-  { year: -195, event: "📖 Plauto — Mostellaria (commedia)" },
-  { year: -168, event: "Battaglia di Pidna — Fine del regno di Macedonia" },
-  { year: -160, event: "📖 Terenzio — Adelphoe (commedia)" },
-  { year: -149, event: "📖 Catone il Censore — De Agri Cultura (più antica prosa latina)" },
-  { year: -149, event: "Inizio III Guerra Punica" },
-  { year: -146, event: "Distruzione di Cartagine e Corinto — Roma egemone del Mediterraneo" },
-  { year: -133, event: "Riforme dei Gracchi e morte di Attalo III — Asia provincia" },
-  { year: -107, event: "Riforma mariana dell'esercito — Esercito professionale" },
-  { year: -91, event: "Guerra sociale — Gli italici chiedono la cittadinanza" },
-  { year: -82, event: "Dittatura di Lucio Cornelio Silla — Proscrizioni e riforme" },
-  { year: -81, event: "📖 Cicerone — Pro Quinctio (prima orazione forense)" },
-  { year: -73, event: "Rivolta di Spartaco" },
-  { year: -60, event: "📖 Catullo — Carmina (poesia lirica latina)" },
-  { year: -60, event: "Primo Triumvirato — Cesare, Pompeo, Crasso" },
-  { year: -58, event: "Cesare inizia la conquista della Gallia" },
-  { year: -54, event: "📖 Lucrezio — De Rerum Natura (poema filosofico)" },
-  { year: -52, event: "📖 Cicerone — De Republica (dialogo politico)" },
-  { year: -52, event: "Battaglia di Alesia — Vercingetorige sconfitto" },
-  { year: -49, event: "Cesare varca il Rubicone — Inizio guerra civile" },
-  { year: -44, event: "📖 Sallustio — De Catilinae Coniuratione" },
-  { year: -44, event: "📖 Cicerone — Filippiche, De Officiis (ultime opere)" },
-  { year: -44, event: "Assassinio di Giulio Cesare alle Idi di Marzo" },
-  { year: -43, event: "Secondo Triumvirato — Ottaviano, Antonio, Lepido" },
-  { year: -37, event: "📖 Virgilio — Bucoliche (Egloghe)" },
-  { year: -31, event: "Battaglia di Azio — Ottaviano sconfigge Antonio e Cleopatra" },
-  { year: -30, event: "Morte di Cleopatra — Egitto diventa provincia romana" },
-  { year: -29, event: "📖 Virgilio — Georgiche" },
-  { year: -27, event: "Augusto diventa princeps — Nascita dell'Impero" },
-  { year: -23, event: "📖 Orazio — Odi (libri I–III)" },
-  { year: -19, event: "📖 Virgilio — Eneide (pubblicata postuma)" },
-  { year: -8, event: "📖 Ovidio — Metamorfosi, Ars Amatoria" },
-  { year: 6, event: "Giudea diventa provincia romana sotto prefetti" },
-  { year: 8, event: "📖 Ovidio — Tristia (dall'esilio sul Mar Nero)" },
-  { year: 9, event: "📖 Tito Livio — Ab Urbe Condita (storia di Roma in 142 libri)" },
-  { year: 9, event: "Battaglia di Teutoburgo — Roma perde la Germania" },
-  { year: 14, event: "Morte di Augusto — Tiberio imperatore" },
-  { year: 43, event: "Conquista della Britannia (Claudio)" },
-  { year: 64, event: "Grande incendio di Roma — Persecuzione dei cristiani" },
-  { year: 65, event: "📖 Seneca — Epistulae Morales ad Lucilium (filosofia stoica)" },
-  { year: 65, event: "📖 Petronio — Satyricon (romanzo satirico)" },
-  { year: 66, event: "Inizio della rivolta giudaica contro Roma" },
-  { year: 69, event: "Anno dei quattro imperatori — Galba, Otone, Vitellio, Vespasiano" },
-  { year: 70, event: "Distruzione di Gerusalemme (Tito)" },
-  { year: 79, event: "Eruzione del Vesuvio — Distruzione di Pompei ed Ercolano" },
-  { year: 95, event: "📖 Quintiliano — Institutio Oratoria (formazione dell'oratore)" },
-  { year: 98, event: "Traiano imperatore — Massima espansione dell'Impero" },
-  { year: 100, event: "📖 Tacito — Agricola, Germania" },
-  { year: 106, event: "Conquista della Dacia — Annessione dell'Arabia" },
-  { year: 109, event: "📖 Tacito — Historiae" },
-  { year: 110, event: "📖 Plinio il Giovane — Epistulae (libri I–X)" },
-  { year: 117, event: "Morte di Traiano — Adriano imperatore" },
-  { year: 121, event: "📖 Svetonio — De Vita Caesarum (Vite dei Cesari)" },
-  { year: 122, event: "Costruzione del Vallo di Adriano in Britannia" },
-  { year: 125, event: "📖 Giovenale — Satire" },
-  { year: 132, event: "Rivolta di Bar Kokhba in Giudea — Ultima rivolta ebraica" },
-  { year: 138, event: "Antonino Pio imperatore — Periodo di pace e prosperità" },
-  { year: 161, event: "Marco Aurelio imperatore — Guerre marcomanniche" },
-  { year: 165, event: "📖 Apuleio — Metamorfosi (Asino d'oro, unico romanzo latino completo)" },
-  { year: 180, event: "📖 Marco Aurelio — Colloqui con se stesso (Meditazioni, in greco)" },
-  { year: 193, event: "Anno dei cinque imperatori" },
-  { year: 212, event: "Constitutio Antoniniana — Cittadinanza a tutti gli abitanti" },
-  { year: 235, event: "Inizio dell'anarchia militare" },
-  { year: 271, event: "Costruzione delle Mura Aureliane" },
-  { year: 274, event: "Aureliano riunifica l'Impero" },
-  { year: 284, event: "Diocleziano imperatore — Riforme amministrative e militari" },
-  { year: 286, event: "Diocleziano divide l'Impero — Massimiano augusto d'Occidente" },
-  { year: 293, event: "Istituzione della Tetrarchia — Due Augusti e due Cesari" },
-  { year: 301, event: "Editto dei prezzi massimi di Diocleziano" },
-  { year: 303, event: "Grande persecuzione di Diocleziano contro i cristiani" },
-  { year: 305, event: "Diocleziano e Massimiano abdicano — Fine della Tetrarchia" },
-  { year: 306, event: "Costantino acclamato imperatore a Eboracum" },
-  { year: 361, event: "Giuliano l'Apostata imperatore — Ultimo tentativo pagano" },
-  { year: 312, event: "Battaglia di Ponte Milvio — Costantino sconfigge Massenzio" },
-  { year: 313, event: "Editto di Milano — Tolleranza verso i cristiani" },
-  { year: 325, event: "Concilio di Nicea" },
-  { year: 330, event: "Dedicazione di Costantinopoli come nuova capitale" },
-  { year: 378, event: "Battaglia di Adrianopoli — Valente sconfitto dai Goti" },
-  { year: 380, event: "Editto di Tessalonica — Cristianesimo religione di Stato" },
-  { year: 382, event: "Visigoti diventano foederati di Roma — Primo insediamento barbarico" },
-  { year: 395, event: "Morte di Teodosio I — Divisione definitiva dell'Impero" },
-  { year: 397, event: "📖 Agostino d'Ippona — Confessioni (autobiografia spirituale)" },
-  { year: 402, event: "Onorio trasferisce la capitale imperiale a Ravenna" },
-  { year: 410, event: "Sacco di Roma ad opera di Alarico (Visigoti)" },
-  { year: 426, event: "📖 Agostino d'Ippona — De Civitate Dei (La città di Dio)" },
-  { year: 451, event: "Battaglia dei Campi Catalaunici — Ezio sconfigge Attila" },
-  { year: 454, event: "Assassinio di Ezio — Ultimo grande generale romano d'Occidente" },
-  { year: 455, event: "Sacco di Roma ad opera dei Vandali" },
-  { year: 476, event: "Deposizione di Romolo Augustolo — Fine Impero d'Occidente" },
-  { year: 488, event: "Teodorico re degli Ostrogoti in Italia" },
-  { year: 527, event: "Giustiniano I imperatore — Inizio della riconquista" },
-  { year: 532, event: "Rivolta di Nika a Costantinopoli — Costruzione di Hagia Sophia" },
-  { year: 533, event: "Campagna d'Africa — Belisario riconquista Cartagine" },
-  { year: 535, event: "Inizio Guerra Gotica — Belisario in Italia" },
-  { year: 537, event: "Consacrazione di Hagia Sophia a Costantinopoli" },
-  { year: 540, event: "Belisario conquista Ravenna — Fine del regno ostrogoto" },
-  { year: 550, event: "📖 Procopio di Cesarea — Storia delle guerre, Storia segreta (Anecdota)" },
-  { year: 554, event: "Prammatica Sanzione — Italia provincia bizantina" },
-  { year: 568, event: "Invasione longobarda in Italia" },
-  { year: 610, event: "Eraclio I imperatore — Riorganizzazione dell'Impero" },
-  { year: 626, event: "Assedio avaro-persiano di Costantinopoli" },
-  { year: 630, event: "📖 Teofilatto Simocatta — Storie (ultimo storico greco-romano classico)" },
-  { year: 634, event: "Inizio delle conquiste arabe — Battaglia di Ajnadayn" },
-  { year: 674, event: "Primo assedio arabo di Costantinopoli" },
-  { year: 698, event: "Caduta di Cartagine — Fine dell'Africa bizantina" },
-  { year: 717, event: "Secondo assedio arabo di Costantinopoli — Leone Isaurico" },
-  { year: 726, event: "Inizio dell'iconoclastia bizantina" },
-  { year: 800, event: "Incoronazione di Carlo Magno — Sacro Romano Impero" },
-  { year: 843, event: "Restaurazione delle icone — Trionfo dell'Ortodossia" },
-  { year: 867, event: "Inizio dinastia macedone — Rinascenza macedone" },
-  { year: 950, event: "📖 Costantino Porfirogenito — De Administrando Imperio, De Ceremoniis" },
-  { year: 988, event: "Battesimo di Vladimir — Cristianizzazione della Rus' di Kiev" },
-  { year: 1054, event: "Scisma d'Oriente — Separazione tra Chiesa cattolica e ortodossa" },
-  { year: 1071, event: "Battaglia di Manzicerta — Conquista turca dell'Anatolia" },
-  { year: 1081, event: "📖 Michele Psello — Chronographia (storia degli imperatori bizantini)" },
-  { year: 1081, event: "Alessio I Comneno imperatore — Inizio restaurazione comnena" },
-  { year: 1096, event: "Prima Crociata — Passaggio dei crociati a Costantinopoli" },
-  { year: 1147, event: "Seconda Crociata — Corrado III e Luigi VII" },
-  { year: 1148, event: "📖 Anna Comnena — Alexiade (biografia di Alessio I Comneno)" },
-  { year: 1176, event: "Battaglia di Miriocefalo — Sconfitta bizantina contro i Selgiuchidi" },
-  { year: 1189, event: "Terza Crociata — Federico Barbarossa, Filippo Augusto, Riccardo Cuor di Leone" },
-  { year: 1204, event: "Sacco di Costantinopoli — Quarta Crociata, Impero Latino" },
-  { year: 1205, event: "Impero di Nicea — Teodoro I Lascaris" },
-  { year: 1261, event: "Michele VIII Paleologo riconquista Costantinopoli" },
-  { year: 1299, event: "Nascita dell'Impero Ottomano — Osman I" },
-  { year: 1354, event: "I Turchi Ottomani conquistano Gallipoli — Primo insediamento in Europa" },
-  { year: 1369, event: "Adrianopoli diventa capitale ottomana (Edirne)" },
-  { year: 1389, event: "Battaglia del Kosovo — Avanzata ottomana nei Balcani" },
-  { year: 1396, event: "Battaglia di Nicopoli — Sconfitta crociata contro gli Ottomani" },
-  { year: 1402, event: "Battaglia di Ankara — Tamerlano sconfigge Bayezid I" },
-  { year: 1422, event: "Assedio ottomano di Costantinopoli" },
-  { year: 1444, event: "Battaglia di Varna — Sconfitta crociata di Ladislao III" },
-  { year: 1453, event: "Caduta di Costantinopoli — Maometto II conquista la città — Fine Impero Romano d'Oriente" }
+  { year: -753, event: "Fondazione di Roma (Romolo)" , url: "https://it.wikipedia.org/wiki/Fondazione_di_Roma" },
+  { year: -617, event: "Inizio monarchia etrusca — Tarquinio Prisco re" , url: "https://it.wikipedia.org/wiki/Tarquinio_Prisco" },
+  { year: -578, event: "Riforme di Servio Tullio — Mura serviane, comizi centuriati" , url: "https://it.wikipedia.org/wiki/Servio_Tullio" },
+  { year: -535, event: "Tarquinio il Superbo — Ultimo re di Roma" , url: "https://it.wikipedia.org/wiki/Tarquinio_il_Superbo" },
+  { year: -509, event: "Cacciata dei Tarquini — Nascita della Repubblica" , url: "https://it.wikipedia.org/wiki/Cacciata_dei_Tarquini" },
+  { year: -508, event: "Istituzione del pontifex maximus" , url: "https://it.wikipedia.org/wiki/Pontifex_maximus" },
+  { year: -496, event: "Battaglia del Lago Regillo — Roma sconfigge i Latini" , url: "https://it.wikipedia.org/wiki/Battaglia_del_Lago_Regillo" },
+  { year: -494, event: "Prima secessione della plebe — Istituzione tribuni della plebe" , url: "https://it.wikipedia.org/wiki/Secessione_della_plebe" },
+  { year: -493, event: "Foedus Cassianum — Trattato di alleanza con i Latini" , url: "https://it.wikipedia.org/wiki/Foedus_Cassianum" },
+  { year: -451, event: "Leggi delle XII Tavole — Prime leggi scritte di Roma" , url: "https://it.wikipedia.org/wiki/Leggi_delle_XII_tavole" },
+  { year: -445, event: "Lex Canuleia — Consentiti i matrimoni tra patrizi e plebei" , url: "https://it.wikipedia.org/wiki/Lex_Canuleia" },
+  { year: -396, event: "Conquista di Veio — Roma espande il dominio in Etruria" , url: "https://it.wikipedia.org/wiki/Veio" },
+  { year: -390, event: "Sacco di Roma da parte dei Galli Senoni" , url: "https://it.wikipedia.org/wiki/Sacco_di_Roma_(390_a.C.)" },
+  { year: -367, event: "Leggi Licinie-Sestie — Patrizi e plebei condividono il consolato" , url: "https://it.wikipedia.org/wiki/Leggi_Licinie-Sestie" },
+  { year: -338, event: "Roma scioglie la Lega Latina — Controllo diretto sul Lazio" , url: "https://it.wikipedia.org/wiki/Lega_Latina" },
+  { year: -326, event: "Lex Poetelia-Papiria — Abolita la schiavitù per debiti" , url: "https://it.wikipedia.org/wiki/Lex_Poetelia_Papiria" },
+  { year: -312, event: "Inizio costruzione della Via Appia" , url: "https://it.wikipedia.org/wiki/Via_Appia" },
+  { year: -343, event: "Inizio guerre sannitiche" , url: "https://it.wikipedia.org/wiki/Guerre_sannitiche" },
+  { year: -300, event: "Lex Ogulnia — Plebei ammessi ai collegi sacerdotali" , url: "https://it.wikipedia.org/wiki/Lex_Ogulnia" },
+  { year: -290, event: "Fine guerre sannitiche — Roma domina l'Italia centrale" , url: "https://it.wikipedia.org/wiki/Guerre_sannitiche" },
+  { year: -275, event: "Battaglia di Benevento — Pirro lascia l'Italia" , url: "https://it.wikipedia.org/wiki/Pirro" },
+  { year: -264, event: "Inizio Prima Guerra Punica" , url: "https://it.wikipedia.org/wiki/Prima_guerra_punica" },
+  { year: -260, event: "Battaglia di Milazzo — Prima vittoria navale romana" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Milazzo" },
+  { year: -241, event: "Fine Prima Guerra Punica — Roma conquista Sicilia" , url: "https://it.wikipedia.org/wiki/Prima_guerra_punica" },
+  { year: -240, event: "📖 Livio Andronico — Odusia (prima opera letteraria latina)" , url: "https://it.wikipedia.org/wiki/Livio_Andronico" },
+  { year: -238, event: "Annessione di Sardegna e Corsica" , url: "https://it.wikipedia.org/wiki/Sardegna_e_Corsica" },
+  { year: -235, event: "📖 Gneo Nevio — Bellum Punicum (poema epico)" , url: "https://it.wikipedia.org/wiki/Gneo_Nevio" },
+  { year: -218, event: "Annibale attraversa le Alpi — Inizio II Guerra Punica" , url: "https://it.wikipedia.org/wiki/Seconda_guerra_punica" },
+  { year: -216, event: "Battaglia di Canne" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Canne" },
+  { year: -204, event: "📖 Quinto Ennio — Annales (poema epico nazionale)" , url: "https://it.wikipedia.org/wiki/Quinto_Ennio" },
+  { year: -202, event: "Battaglia di Zama — Sconfitta di Annibale" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Zama" },
+  { year: -197, event: "La Spagna diventa provincia romana" , url: "https://it.wikipedia.org/wiki/Spagna_(provincia_romana)" },
+  { year: -195, event: "📖 Plauto — Mostellaria (commedia)" , url: "https://it.wikipedia.org/wiki/Plauto" },
+  { year: -168, event: "Battaglia di Pidna — Fine del regno di Macedonia" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Pidna" },
+  { year: -160, event: "📖 Terenzio — Adelphoe (commedia)" , url: "https://it.wikipedia.org/wiki/Terenzio" },
+  { year: -149, event: "📖 Catone il Censore — De Agri Cultura (più antica prosa latina)" , url: "https://it.wikipedia.org/wiki/Catone_il_Censore" },
+  { year: -149, event: "Inizio III Guerra Punica" , url: "https://it.wikipedia.org/wiki/Terza_guerra_punica" },
+  { year: -146, event: "Distruzione di Cartagine e Corinto — Roma egemone del Mediterraneo" , url: "https://it.wikipedia.org/wiki/Guerra_punica" },
+  { year: -133, event: "Riforme dei Gracchi e morte di Attalo III — Asia provincia" , url: "https://it.wikipedia.org/wiki/Riforme_dei_Gracchi" },
+  { year: -107, event: "Riforma mariana dell'esercito — Esercito professionale" , url: "https://it.wikipedia.org/wiki/Riforma_mariana" },
+  { year: -91, event: "Guerra sociale — Gli italici chiedono la cittadinanza" , url: "https://it.wikipedia.org/wiki/Guerra_sociale" },
+  { year: -82, event: "Dittatura di Lucio Cornelio Silla — Proscrizioni e riforme" , url: "https://it.wikipedia.org/wiki/Lucio_Cornelio_Silla" },
+  { year: -81, event: "📖 Cicerone — Pro Quinctio (prima orazione forense)" , url: "https://it.wikipedia.org/wiki/Marco_Tullio_Cicerone" },
+  { year: -73, event: "Rivolta di Spartaco" , url: "https://it.wikipedia.org/wiki/Spartaco" },
+  { year: -60, event: "📖 Catullo — Carmina (poesia lirica latina)" , url: "https://it.wikipedia.org/wiki/Catullo" },
+  { year: -60, event: "Primo Triumvirato — Cesare, Pompeo, Crasso" , url: "https://it.wikipedia.org/wiki/Primo_triumvirato" },
+  { year: -58, event: "Cesare inizia la conquista della Gallia" , url: "https://it.wikipedia.org/wiki/Conquista_della_Gallia" },
+  { year: -54, event: "📖 Lucrezio — De Rerum Natura (poema filosofico)" , url: "https://it.wikipedia.org/wiki/Lucrezio" },
+  { year: -52, event: "📖 Cicerone — De Republica (dialogo politico)" , url: "https://it.wikipedia.org/wiki/Marco_Tullio_Cicerone" },
+  { year: -52, event: "Battaglia di Alesia — Vercingetorige sconfitto" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Alesia" },
+  { year: -49, event: "Cesare varca il Rubicone — Inizio guerra civile" , url: "https://it.wikipedia.org/wiki/Rubicone" },
+  { year: -44, event: "📖 Sallustio — De Catilinae Coniuratione" , url: "https://it.wikipedia.org/wiki/Gaio_Sallustio_Crispo" },
+  { year: -44, event: "📖 Cicerone — Filippiche, De Officiis (ultime opere)" , url: "https://it.wikipedia.org/wiki/Marco_Tullio_Cicerone" },
+  { year: -44, event: "Assassinio di Giulio Cesare alle Idi di Marzo" , url: "https://it.wikipedia.org/wiki/Assassinio_di_Giulio_Cesare" },
+  { year: -43, event: "Secondo Triumvirato — Ottaviano, Antonio, Lepido" , url: "https://it.wikipedia.org/wiki/Secondo_triumvirato" },
+  { year: -37, event: "📖 Virgilio — Bucoliche (Egloghe)" , url: "https://it.wikipedia.org/wiki/Virgilio" },
+  { year: -31, event: "Battaglia di Azio — Ottaviano sconfigge Antonio e Cleopatra" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Azio" },
+  { year: -30, event: "Morte di Cleopatra — Egitto diventa provincia romana" , url: "https://it.wikipedia.org/wiki/Cleopatra" },
+  { year: -29, event: "📖 Virgilio — Georgiche" , url: "https://it.wikipedia.org/wiki/Virgilio" },
+  { year: -27, event: "Augusto diventa princeps — Nascita dell'Impero" , url: "https://it.wikipedia.org/wiki/Augusto_(imperatore)" },
+  { year: -23, event: "📖 Orazio — Odi (libri I–III)" , url: "https://it.wikipedia.org/wiki/Orazio" },
+  { year: -19, event: "📖 Virgilio — Eneide (pubblicata postuma)" , url: "https://it.wikipedia.org/wiki/Virgilio" },
+  { year: -8, event: "📖 Ovidio — Metamorfosi, Ars Amatoria" , url: "https://it.wikipedia.org/wiki/Ovidio" },
+  { year: 6, event: "Giudea diventa provincia romana sotto prefetti" , url: "https://it.wikipedia.org/wiki/Giudea_(provincia_romana)" },
+  { year: 8, event: "📖 Ovidio — Tristia (dall'esilio sul Mar Nero)" , url: "https://it.wikipedia.org/wiki/Ovidio" },
+  { year: 9, event: "📖 Tito Livio — Ab Urbe Condita (storia di Roma in 142 libri)" , url: "https://it.wikipedia.org/wiki/Tito_Livio" },
+  { year: 9, event: "Battaglia di Teutoburgo — Roma perde la Germania" , url: "https://it.wikipedia.org/wiki/Battaglia_della_foresta_di_Teutoburgo" },
+  { year: 14, event: "Morte di Augusto — Tiberio imperatore" , url: "https://it.wikipedia.org/wiki/Tiberio" },
+  { year: 43, event: "Conquista della Britannia (Claudio)" , url: "https://it.wikipedia.org/wiki/Conquista_romana_della_Britannia" },
+  { year: 64, event: "Grande incendio di Roma — Persecuzione dei cristiani" , url: "https://it.wikipedia.org/wiki/Grande_incendio_di_Roma" },
+  { year: 65, event: "📖 Seneca — Epistulae Morales ad Lucilium (filosofia stoica)" , url: "https://it.wikipedia.org/wiki/Lucio_Anneo_Seneca" },
+  { year: 65, event: "📖 Petronio — Satyricon (romanzo satirico)" , url: "https://it.wikipedia.org/wiki/Petronio" },
+  { year: 66, event: "Inizio della rivolta giudaica contro Roma" , url: "https://it.wikipedia.org/wiki/Prima_guerra_giudaica" },
+  { year: 69, event: "Anno dei quattro imperatori — Galba, Otone, Vitellio, Vespasiano" , url: "https://it.wikipedia.org/wiki/Anno_dei_quattro_imperatori" },
+  { year: 70, event: "Distruzione di Gerusalemme (Tito)" , url: "https://it.wikipedia.org/wiki/Assedio_di_Gerusalemme_(70)" },
+  { year: 79, event: "Eruzione del Vesuvio — Distruzione di Pompei ed Ercolano" , url: "https://it.wikipedia.org/wiki/Eruzione_del_Vesuvio_del_79" },
+  { year: 95, event: "📖 Quintiliano — Institutio Oratoria (formazione dell'oratore)" , url: "https://it.wikipedia.org/wiki/Marco_Fabio_Quintiliano" },
+  { year: 98, event: "Traiano imperatore — Massima espansione dell'Impero" , url: "https://it.wikipedia.org/wiki/Traiano" },
+  { year: 100, event: "📖 Tacito — Agricola, Germania" , url: "https://it.wikipedia.org/wiki/Publio_Cornelio_Tacito" },
+  { year: 106, event: "Conquista della Dacia — Annessione dell'Arabia" , url: "https://it.wikipedia.org/wiki/Conquista_della_Dacia" },
+  { year: 109, event: "📖 Tacito — Historiae" , url: "https://it.wikipedia.org/wiki/Publio_Cornelio_Tacito" },
+  { year: 110, event: "📖 Plinio il Giovane — Epistulae (libri I–X)" , url: "https://it.wikipedia.org/wiki/Plinio_il_Giovane" },
+  { year: 117, event: "Morte di Traiano — Adriano imperatore" , url: "https://it.wikipedia.org/wiki/Adriano" },
+  { year: 121, event: "📖 Svetonio — De Vita Caesarum (Vite dei Cesari)" , url: "https://it.wikipedia.org/wiki/Gaio_Svetonio_Tranquillo" },
+  { year: 122, event: "Costruzione del Vallo di Adriano in Britannia" , url: "https://it.wikipedia.org/wiki/Vallo_di_Adriano" },
+  { year: 125, event: "📖 Giovenale — Satire" , url: "https://it.wikipedia.org/wiki/Giovenale" },
+  { year: 132, event: "Rivolta di Bar Kokhba in Giudea — Ultima rivolta ebraica" , url: "https://it.wikipedia.org/wiki/Rivolta_di_Bar_Kokhba" },
+  { year: 138, event: "Antonino Pio imperatore — Periodo di pace e prosperità" , url: "https://it.wikipedia.org/wiki/Antonino_Pio" },
+  { year: 161, event: "Marco Aurelio imperatore — Guerre marcomanniche" , url: "https://it.wikipedia.org/wiki/Marco_Aurelio" },
+  { year: 165, event: "📖 Apuleio — Metamorfosi (Asino d'oro, unico romanzo latino completo)" , url: "https://it.wikipedia.org/wiki/Apuleio" },
+  { year: 180, event: "📖 Marco Aurelio — Colloqui con se stesso (Meditazioni, in greco)" , url: "https://it.wikipedia.org/wiki/Marco_Aurelio" },
+  { year: 193, event: "Anno dei cinque imperatori" , url: "https://it.wikipedia.org/wiki/Anno_dei_cinque_imperatori" },
+  { year: 212, event: "Constitutio Antoniniana — Cittadinanza a tutti gli abitanti" , url: "https://it.wikipedia.org/wiki/Constitutio_Antoniniana" },
+  { year: 235, event: "Inizio dell'anarchia militare" , url: "https://it.wikipedia.org/wiki/Anarchia_militare" },
+  { year: 271, event: "Costruzione delle Mura Aureliane" , url: "https://it.wikipedia.org/wiki/Mura_aureliane" },
+  { year: 274, event: "Aureliano riunifica l'Impero" , url: "https://it.wikipedia.org/wiki/Aureliano" },
+  { year: 284, event: "Diocleziano imperatore — Riforme amministrative e militari" , url: "https://it.wikipedia.org/wiki/Diocleziano" },
+  { year: 286, event: "Diocleziano divide l'Impero — Massimiano augusto d'Occidente" , url: "https://it.wikipedia.org/wiki/Tetrarchia" },
+  { year: 293, event: "Istituzione della Tetrarchia — Due Augusti e due Cesari" , url: "https://it.wikipedia.org/wiki/Tetrarchia" },
+  { year: 301, event: "Editto dei prezzi massimi di Diocleziano" , url: "https://it.wikipedia.org/wiki/Editto_dei_prezzi_massimi" },
+  { year: 303, event: "Grande persecuzione di Diocleziano contro i cristiani" , url: "https://it.wikipedia.org/wiki/Persecuzione_di_Diocleziano" },
+  { year: 305, event: "Diocleziano e Massimiano abdicano — Fine della Tetrarchia" , url: "https://it.wikipedia.org/wiki/Diocleziano" },
+  { year: 306, event: "Costantino acclamato imperatore a Eboracum" , url: "https://it.wikipedia.org/wiki/Costantino_I" },
+  { year: 361, event: "Giuliano l'Apostata imperatore — Ultimo tentativo pagano" , url: "https://it.wikipedia.org/wiki/Giuliano_(imperatore)" },
+  { year: 312, event: "Battaglia di Ponte Milvio — Costantino sconfigge Massenzio" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Ponte_Milvio" },
+  { year: 313, event: "Editto di Milano — Tolleranza verso i cristiani" , url: "https://it.wikipedia.org/wiki/Editto_di_Milano" },
+  { year: 325, event: "Concilio di Nicea" , url: "https://it.wikipedia.org/wiki/Concilio_di_Nicea_(325)" },
+  { year: 330, event: "Dedicazione di Costantinopoli come nuova capitale" , url: "https://it.wikipedia.org/wiki/Costantinopoli" },
+  { year: 378, event: "Battaglia di Adrianopoli — Valente sconfitto dai Goti" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Adrianopoli_(378)" },
+  { year: 380, event: "Editto di Tessalonica — Cristianesimo religione di Stato" , url: "https://it.wikipedia.org/wiki/Editto_di_Tessalonica" },
+  { year: 382, event: "Visigoti diventano foederati di Roma — Primo insediamento barbarico" , url: "https://it.wikipedia.org/wiki/Foederati" },
+  { year: 395, event: "Morte di Teodosio I — Divisione definitiva dell'Impero" , url: "https://it.wikipedia.org/wiki/Teodosio_I" },
+  { year: 397, event: "📖 Agostino d'Ippona — Confessioni (autobiografia spirituale)" , url: "https://it.wikipedia.org/wiki/Agostino_d'Ippona" },
+  { year: 402, event: "Onorio trasferisce la capitale imperiale a Ravenna" , url: "https://it.wikipedia.org/wiki/Ravenna" },
+  { year: 410, event: "Sacco di Roma ad opera di Alarico (Visigoti)" , url: "https://it.wikipedia.org/wiki/Sacco_di_Roma_(410)" },
+  { year: 426, event: "📖 Agostino d'Ippona — De Civitate Dei (La città di Dio)" , url: "https://it.wikipedia.org/wiki/Agostino_d'Ippona" },
+  { year: 451, event: "Battaglia dei Campi Catalaunici — Ezio sconfigge Attila" , url: "https://it.wikipedia.org/wiki/Battaglia_dei_Campi_Catalaunici" },
+  { year: 454, event: "Assassinio di Ezio — Ultimo grande generale romano d'Occidente" , url: "https://it.wikipedia.org/wiki/Flavio_Ezio" },
+  { year: 455, event: "Sacco di Roma ad opera dei Vandali" , url: "https://it.wikipedia.org/wiki/Sacco_di_Roma_(455)" },
+  { year: 476, event: "Deposizione di Romolo Augustolo — Fine Impero d'Occidente" , url: "https://it.wikipedia.org/wiki/Romolo_Augusto" },
+  { year: 488, event: "Teodorico re degli Ostrogoti in Italia" , url: "https://it.wikipedia.org/wiki/Teodorico_il_Grande" },
+  { year: 527, event: "Giustiniano I imperatore — Inizio della riconquista" , url: "https://it.wikipedia.org/wiki/Giustiniano_I" },
+  { year: 532, event: "Rivolta di Nika a Costantinopoli — Costruzione di Hagia Sophia" , url: "https://it.wikipedia.org/wiki/Rivolta_di_Nika" },
+  { year: 533, event: "Campagna d'Africa — Belisario riconquista Cartagine" , url: "https://it.wikipedia.org/wiki/Campagna_d'Africa_(533-534)" },
+  { year: 535, event: "Inizio Guerra Gotica — Belisario in Italia" , url: "https://it.wikipedia.org/wiki/Guerra_gotica_(535-553)" },
+  { year: 537, event: "Consacrazione di Hagia Sophia a Costantinopoli" , url: "https://it.wikipedia.org/wiki/Hagia_Sophia" },
+  { year: 540, event: "Belisario conquista Ravenna — Fine del regno ostrogoto" , url: "https://it.wikipedia.org/wiki/Belisario" },
+  { year: 550, event: "📖 Procopio di Cesarea — Storia delle guerre, Storia segreta (Anecdota)" , url: "https://it.wikipedia.org/wiki/Procopio_di_Cesarea" },
+  { year: 554, event: "Prammatica Sanzione — Italia provincia bizantina" , url: "https://it.wikipedia.org/wiki/Prammatica_sanzione" },
+  { year: 568, event: "Invasione longobarda in Italia" , url: "https://it.wikipedia.org/wiki/Invasione_longobarda_dell'Italia" },
+  { year: 610, event: "Eraclio I imperatore — Riorganizzazione dell'Impero" , url: "https://it.wikipedia.org/wiki/Eraclio_I" },
+  { year: 626, event: "Assedio avaro-persiano di Costantinopoli" , url: "https://it.wikipedia.org/wiki/Assedio_di_Costantinopoli_(626)" },
+  { year: 630, event: "📖 Teofilatto Simocatta — Storie (ultimo storico greco-romano classico)" , url: "https://it.wikipedia.org/wiki/Teofilatto_Simocatta" },
+  { year: 634, event: "Inizio delle conquiste arabe — Battaglia di Ajnadayn" , url: "https://it.wikipedia.org/wiki/Conquiste_islamiche" },
+  { year: 674, event: "Primo assedio arabo di Costantinopoli" , url: "https://it.wikipedia.org/wiki/Assedio_di_Costantinopoli_(674-678)" },
+  { year: 698, event: "Caduta di Cartagine — Fine dell'Africa bizantina" , url: "https://it.wikipedia.org/wiki/Caduta_di_Cartagine_(698)" },
+  { year: 717, event: "Secondo assedio arabo di Costantinopoli — Leone Isaurico" , url: "https://it.wikipedia.org/wiki/Assedio_di_Costantinopoli_(717-718)" },
+  { year: 726, event: "Inizio dell'iconoclastia bizantina" , url: "https://it.wikipedia.org/wiki/Iconoclastia" },
+  { year: 800, event: "Incoronazione di Carlo Magno — Sacro Romano Impero" , url: "https://it.wikipedia.org/wiki/Carlo_Magno" },
+  { year: 843, event: "Restaurazione delle icone — Trionfo dell'Ortodossia" , url: "https://it.wikipedia.org/wiki/Iconoclastia" },
+  { year: 867, event: "Inizio dinastia macedone — Rinascenza macedone" , url: "https://it.wikipedia.org/wiki/Dinastia_macedone" },
+  { year: 950, event: "📖 Costantino Porfirogenito — De Administrando Imperio, De Ceremoniis" , url: "https://it.wikipedia.org/wiki/Costantino_VII_Porfirogenito" },
+  { year: 988, event: "Battesimo di Vladimir — Cristianizzazione della Rus' di Kiev" , url: "https://it.wikipedia.org/wiki/Battesimo_della_Rus'_di_Kiev" },
+  { year: 1054, event: "Scisma d'Oriente — Separazione tra Chiesa cattolica e ortodossa" , url: "https://it.wikipedia.org/wiki/Scisma_d'Oriente" },
+  { year: 1071, event: "Battaglia di Manzicerta — Conquista turca dell'Anatolia" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Manzicerta" },
+  { year: 1081, event: "📖 Michele Psello — Chronographia (storia degli imperatori bizantini)" , url: "https://it.wikipedia.org/wiki/Michele_Psello" },
+  { year: 1081, event: "Alessio I Comneno imperatore — Inizio restaurazione comnena" , url: "https://it.wikipedia.org/wiki/Alessio_I_Comneno" },
+  { year: 1096, event: "Prima Crociata — Passaggio dei crociati a Costantinopoli" , url: "https://it.wikipedia.org/wiki/Prima_crociata" },
+  { year: 1147, event: "Seconda Crociata — Corrado III e Luigi VII" , url: "https://it.wikipedia.org/wiki/Seconda_crociata" },
+  { year: 1148, event: "📖 Anna Comnena — Alexiade (biografia di Alessio I Comneno)" , url: "https://it.wikipedia.org/wiki/Anna_Comnena" },
+  { year: 1176, event: "Battaglia di Miriocefalo — Sconfitta bizantina contro i Selgiuchidi" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Miriocefalo" },
+  { year: 1189, event: "Terza Crociata — Federico Barbarossa, Filippo Augusto, Riccardo Cuor di Leone" , url: "https://it.wikipedia.org/wiki/Terza_crociata" },
+  { year: 1204, event: "Sacco di Costantinopoli — Quarta Crociata, Impero Latino" , url: "https://it.wikipedia.org/wiki/Sacco_di_Costantinopoli_(1204)" },
+  { year: 1205, event: "Impero di Nicea — Teodoro I Lascaris" , url: "https://it.wikipedia.org/wiki/Impero_di_Nicea" },
+  { year: 1261, event: "Michele VIII Paleologo riconquista Costantinopoli" , url: "https://it.wikipedia.org/wiki/Michele_VIII_Paleologo" },
+  { year: 1299, event: "Nascita dell'Impero Ottomano — Osman I" , url: "https://it.wikipedia.org/wiki/Impero_ottomano" },
+  { year: 1354, event: "I Turchi Ottomani conquistano Gallipoli — Primo insediamento in Europa" , url: "https://it.wikipedia.org/wiki/Gallipoli_(Turchia)" },
+  { year: 1369, event: "Adrianopoli diventa capitale ottomana (Edirne)" , url: "https://it.wikipedia.org/wiki/Edirne" },
+  { year: 1389, event: "Battaglia del Kosovo — Avanzata ottomana nei Balcani" , url: "https://it.wikipedia.org/wiki/Battaglia_del_Kosovo_(1389)" },
+  { year: 1396, event: "Battaglia di Nicopoli — Sconfitta crociata contro gli Ottomani" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Nicopoli" },
+  { year: 1402, event: "Battaglia di Ankara — Tamerlano sconfigge Bayezid I" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Ankara" },
+  { year: 1422, event: "Assedio ottomano di Costantinopoli" , url: "https://it.wikipedia.org/wiki/Assedio_di_Costantinopoli_(1422)" },
+  { year: 1444, event: "Battaglia di Varna — Sconfitta crociata di Ladislao III" , url: "https://it.wikipedia.org/wiki/Battaglia_di_Varna" },
+  { year: 1453, event: "Caduta di Costantinopoli — Maometto II conquista la città — Fine Impero Romano d'Oriente" , url: "https://it.wikipedia.org/wiki/Caduta_di_Costantinopoli" }
+];
+const emperors = [
+  { name: "Augusto", start: -27, end: 14, dynasty: "Giulio-Claudia", url: "https://storieromane.altervista.org/biografie/eta-imperiale/augusto/" },
+  { name: "Tiberio", start: 14, end: 37, dynasty: "Giulio-Claudia", url: "https://storieromane.altervista.org/tiberio/" },
+  { name: "Caligola", start: 37, end: 41, dynasty: "Giulio-Claudia", url: "https://storieromane.altervista.org/caligola/" },
+  { name: "Claudio", start: 41, end: 54, dynasty: "Giulio-Claudia", url: "https://storieromane.altervista.org/claudio/" },
+  { name: "Nerone", start: 54, end: 68, dynasty: "Giulio-Claudia", url: "https://storieromane.altervista.org/biografie/eta-imperiale/nerone/" },
+  { name: "Galba", start: 68, end: 69, dynasty: "Anno dei quattro imperatori", url: "https://storieromane.altervista.org/galba/" },
+  { name: "Otone", start: 69, end: 69, dynasty: "Anno dei quattro imperatori", url: "https://storieromane.altervista.org/otone/" },
+  { name: "Vitellio", start: 69, end: 69, dynasty: "Anno dei quattro imperatori", url: "https://storieromane.altervista.org/vitellio/" },
+  { name: "Vespasiano", start: 69, end: 79, dynasty: "Flavia", url: "https://storieromane.altervista.org/vespasiano/" },
+  { name: "Tito", start: 79, end: 81, dynasty: "Flavia", url: "https://storieromane.altervista.org/tito/" },
+  { name: "Domiziano", start: 81, end: 96, dynasty: "Flavia", url: "https://storieromane.altervista.org/domiziano/" },
+  { name: "Nerva", start: 96, end: 98, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/nerva/" },
+  { name: "Traiano", start: 98, end: 117, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/traiano/" },
+  { name: "Adriano", start: 117, end: 138, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/adriano/" },
+  { name: "Antonino Pio", start: 138, end: 161, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/antonino-pio/" },
+  { name: "Marco Aurelio", start: 161, end: 180, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/marco-aurelio/" },
+  { name: "Lucio Vero", start: 161, end: 169, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/lucio-vero/" },
+  { name: "Commodo", start: 180, end: 192, dynasty: "Imperatori adottivi", url: "https://storieromane.altervista.org/commodo/" },
+  { name: "Pertinace", start: 192, end: 193, dynasty: "Anno dei cinque imperatori", url: "https://storieromane.altervista.org/pertinace/" },
+  { name: "Didio Giuliano", start: 193, end: 193, dynasty: "Anno dei cinque imperatori", url: "https://storieromane.altervista.org/didio-giuliano/" },
+  { name: "Settimio Severo", start: 193, end: 211, dynasty: "Severi", url: "https://storieromane.altervista.org/settimio-severo/" },
+  { name: "Caracalla", start: 211, end: 217, dynasty: "Severi", url: "https://storieromane.altervista.org/caracalla/" },
+  { name: "Macrino", start: 217, end: 218, dynasty: "Severi", url: "https://storieromane.altervista.org/macrino/" },
+  { name: "Eliogabalo", start: 218, end: 222, dynasty: "Severi", url: "https://storieromane.altervista.org/eliogabalo/" },
+  { name: "Alessandro Severo", start: 222, end: 235, dynasty: "Severi", url: "https://storieromane.altervista.org/alessandro-severo/" },
+  { name: "Massimino il Trace", start: 235, end: 238, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/massimino-il-trace/" },
+  { name: "Gordiano III", start: 238, end: 244, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/gordiano-iii/" },
+  { name: "Filippo l'Arabo", start: 244, end: 249, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/filippo-larabo/" },
+  { name: "Decio", start: 249, end: 251, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/decio/" },
+  { name: "Treboniano Gallo", start: 251, end: 253, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/treboniano-gallo/" },
+  { name: "Emiliano", start: 253, end: 253, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/emiliano/" },
+  { name: "Valeriano", start: 253, end: 260, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/valeriano/" },
+  { name: "Gallieno", start: 260, end: 268, dynasty: "Anarchia militare", url: "https://storieromane.altervista.org/gallieno/" },
+  { name: "Claudio II il Gotico", start: 268, end: 270, dynasty: "Illirici", url: "https://storieromane.altervista.org/claudio-ii-il-gotico/" },
+  { name: "Aureliano", start: 270, end: 275, dynasty: "Illirici", url: "https://storieromane.altervista.org/aureliano/" },
+  { name: "Tacito", start: 275, end: 276, dynasty: "Illirici", url: "https://storieromane.altervista.org/tacito/" },
+  { name: "Probo", start: 276, end: 282, dynasty: "Illirici", url: "https://storieromane.altervista.org/probo/" },
+  { name: "Caro", start: 282, end: 283, dynasty: "Illirici", url: "https://storieromane.altervista.org/caro/" },
+  { name: "Diocleziano", start: 284, end: 305, dynasty: "Tetrarchia", url: "https://storieromane.altervista.org/diocleziano-2/" },
+  { name: "Massimiano", start: 286, end: 305, dynasty: "Tetrarchia", url: "https://storieromane.altervista.org/massimiano/" },
+  { name: "Costanzo Cloro", start: 305, end: 306, dynasty: "Tetrarchia", url: "https://storieromane.altervista.org/costanzo-cloro/" },
+  { name: "Costantino", start: 306, end: 337, dynasty: "Tardoantico", url: "https://storieromane.altervista.org/biografie/eta-imperiale/constantino/" },
+  { name: "Costanzo II", start: 337, end: 361, dynasty: "Tardoantico", url: "https://storieromane.altervista.org/costanzo-ii/" },
+  { name: "Giuliano", start: 361, end: 363, dynasty: "Tardoantico", url: "https://storieromane.altervista.org/giuliano/" },
+  { name: "Valentiniano I", start: 364, end: 375, dynasty: "Tardoantico", url: "https://storieromane.altervista.org/valentiniano/" },
+  { name: "Valente", start: 364, end: 378, dynasty: "Tardoantico", url: "https://storieromane.altervista.org/valente/" },
+  { name: "Teodosio I", start: 379, end: 395, dynasty: "Tardoantico", url: "https://storieromane.altervista.org/teodosio/" },
+  { name: "Arcadio (Oriente)", start: 395, end: 408, dynasty: "Impero d'Oriente", url: "https://storieromane.altervista.org/arcadio/" },
+  { name: "Onorio (Occidente)", start: 395, end: 423, dynasty: "Impero d'Occidente", url: "https://storieromane.altervista.org/onorio/" },
+  { name: "Teodosio II (Oriente)", start: 408, end: 450, dynasty: "Impero d'Oriente", url: "https://storieromane.altervista.org/teodosio-ii/" },
+  { name: "Valentiniano III (Occidente)", start: 425, end: 455, dynasty: "Impero d'Occidente", url: "https://storieromane.altervista.org/valentiniano-iii/" },
+  { name: "Marciano (Oriente)", start: 450, end: 457, dynasty: "Impero d'Oriente", url: "https://storieromane.altervista.org/marciano/" },
+  { name: "Romolo Augustolo (Occidente)", start: 475, end: 476, dynasty: "Impero d'Occidente", url: "https://storieromane.altervista.org/romolo-augustolo/" },
+  { name: "Zenone (Oriente)", start: 474, end: 491, dynasty: "Impero d'Oriente", url: "https://storieromane.altervista.org/zenone/" },
+  { name: "Giustiniano", start: 527, end: 565, dynasty: "Impero d'Oriente", url: "https://storieromane.altervista.org/biografie/dopo-limpero/giustiniano/" },
 ];
 const provinces = [
   { name: "Italia", lat: 42.0, lng: 12.5, controlled: [-753, 476], byzantine: [476, 568] },
@@ -1082,23 +1165,29 @@ function updateMap(year) {
   const futureEvents = romanEvents.filter(e => e.year >= year);
   const prevEvent = pastEvents.length > 0 ? pastEvents[pastEvents.length - 1] : null;
   const nextEvent = futureEvents.length > 0 ? futureEvents[0] : null;
-  let eventText = '';
+  let displayEvent = null;
   if (prevEvent && Math.abs(prevEvent.year - year) <= 3) {
-    eventText = `${prevEvent.event}`;
+    displayEvent = prevEvent;
   } else if (prevEvent && nextEvent && prevEvent !== nextEvent) {
-    eventText = `${prevEvent.event}`;
+    displayEvent = prevEvent;
   } else if (prevEvent) {
-    eventText = prevEvent.event ? `${prevEvent.event}` : '';
+    displayEvent = prevEvent.event ? prevEvent : null;
   }
-  if (eventText !== eventEl.dataset.lastEvent) {
-    eventEl.dataset.lastEvent = eventText;
+  const eventKey = displayEvent ? `${displayEvent.year}|${displayEvent.event}` : '';
+  if (eventKey !== eventEl.dataset.lastEvent) {
+    eventEl.dataset.lastEvent = eventKey;
     eventEl.classList.remove('has-event');
-    if (eventText) {
-      eventEl.textContent = `📜 ${eventText}`;
+    if (displayEvent) {
+      const label = `📜 ${displayEvent.event}`;
+      if (displayEvent.url) {
+        eventEl.innerHTML = `<a href="${displayEvent.url}" target="_blank" rel="noopener" style="color:#ffd700;text-decoration:none;border-bottom:1px dotted rgba(255,215,0,0.3);" onmouseover="this.style.borderBottomColor='#ffd700'" onmouseout="this.style.borderBottomColor='rgba(255,215,0,0.3)'">${label} ↗</a>`;
+      } else {
+        eventEl.innerHTML = label;
+      }
       void eventEl.offsetWidth;
       eventEl.classList.add('has-event');
     } else {
-      eventEl.textContent = '';
+      eventEl.innerHTML = '';
     }
   }
 }
@@ -1138,6 +1227,18 @@ function updateYearDisplay(year) {
     dynastyEl.style.display = 'inline';
   } else {
     dynastyEl.style.display = 'none';
+  }
+  const emperorEl = document.getElementById('emperor-badge');
+  let currentEmperor = null;
+  for (const e of emperors) {
+    if (year >= e.start && year < e.end) { currentEmperor = e; break; }
+  }
+  if (currentEmperor) {
+    emperorEl.innerHTML = `<span class="emperor-name"><a href="${currentEmperor.url}" target="_blank" rel="noopener" style="color:#4ecca3;text-decoration:none;border-bottom:1px dotted rgba(78,204,163,0.3);" onmouseover="this.style.borderBottomColor='#4ecca3'" onmouseout="this.style.borderBottomColor='rgba(78,204,163,0.3)'">${currentEmperor.name}</a></span> <span class="emperor-dynasty">· ${currentEmperor.dynasty}</span>`;
+    emperorEl.className = 'era-badge visible';
+  } else {
+    emperorEl.className = 'era-badge';
+    emperorEl.innerHTML = '';
   }
 }
 
