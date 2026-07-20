@@ -11,98 +11,112 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0f17; color: #e6edf3; overflow: hidden; height: 100vh; }
-body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(201,169,89,0.03) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(78,204,163,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4ede4; color: #2c1810; overflow: hidden; height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(201,169,89,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(180,80,60,0.04) 0%, transparent 50%); pointer-events: none; z-index: 0; }
 #container { display: flex; height: 100vh; flex-direction: column; position: relative; z-index: 1; }
-#header { background: linear-gradient(135deg, #0d1117 0%, rgba(22,27,37,0.95) 40%, #0d1117 100%); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #c9a959; z-index: 1000; position: relative; backdrop-filter: blur(12px); }
-#header::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #c9a959, transparent); }
-#header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,169,89,0.3), transparent); }
+#header { background: linear-gradient(135deg, #faf6ef 0%, #f0e8d5 40%, #faf6ef 100%); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #b8860b; z-index: 1000; position: relative; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+#header::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #b8860b, transparent); }
 #header .brand { display: flex; align-items: center; gap: 14px; }
-#header .spqr { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #c9a959; font-weight: 900; letter-spacing: 6px; line-height: 1; opacity: 0.85; text-shadow: 0 0 30px rgba(201,169,89,0.15); }
+#header .spqr { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #8b0000; font-weight: 900; letter-spacing: 6px; line-height: 1; opacity: 0.9; text-shadow: 0 1px 2px rgba(139,0,0,0.1); }
 #header .title-group { display: flex; flex-direction: column; }
-#header h1 { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: #e6edf3; }
-#header h1 span { color: #c9a959; font-weight: 700; }
-#header .subtitle { font-size: 0.7rem; color: #8b949e; letter-spacing: 2px; text-transform: uppercase; }
-#header .era-badge { font-family: 'Cinzel', serif; font-size: 0.7rem; padding: 4px 14px; border-radius: 12px; border: 1px solid; background: rgba(0,0,0,0.3); text-transform: uppercase; letter-spacing: 2px; transition: all 0.4s ease; backdrop-filter: blur(4px); }
-#header .era-badge:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-.era-badge.regnum { color: #e94560; border-color: #e94560; box-shadow: inset 0 0 20px rgba(233,69,96,0.05); }
-.era-badge.respublica { color: #c9a959; border-color: #c9a959; box-shadow: inset 0 0 20px rgba(201,169,89,0.05); }
-.era-badge.imperium { color: #4ecca3; border-color: #4ecca3; box-shadow: inset 0 0 20px rgba(78,204,163,0.05); }
-.era-badge.byzantium { color: #a855f7; border-color: #a855f7; box-shadow: inset 0 0 20px rgba(168,85,247,0.05); }
-#emperor-badge { font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 3px 12px; border-radius: 10px; border: 1px solid rgba(78,204,163,0.3); background: rgba(78,204,163,0.08); color: #4ecca3; letter-spacing: 1px; white-space: nowrap; transition: all 0.4s ease; display: none; backdrop-filter: blur(4px); }
+#header h1 { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: #2c1810; }
+#header h1 span { color: #8b0000; font-weight: 700; }
+#header .subtitle { font-size: 0.7rem; color: #8b7355; letter-spacing: 2px; text-transform: uppercase; }
+#header .era-badge { font-family: 'Cinzel', serif; font-size: 0.7rem; padding: 4px 14px; border-radius: 12px; border: 1px solid; background: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 2px; transition: all 0.4s ease; }
+#header .era-badge:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.era-badge.regnum { color: #c41e3a; border-color: #c41e3a; }
+.era-badge.respublica { color: #b8860b; border-color: #b8860b; }
+.era-badge.imperium { color: #2e7d32; border-color: #2e7d32; }
+.era-badge.byzantium { color: #6a1b9a; border-color: #6a1b9a; }
+#emperor-badge { font-family: 'Cinzel', serif; font-size: 0.6rem; padding: 3px 12px; border-radius: 10px; border: 1px solid rgba(46,125,50,0.3); background: rgba(46,125,50,0.06); color: #2e7d32; letter-spacing: 1px; white-space: nowrap; transition: all 0.4s ease; display: none; }
 #emperor-badge.visible { display: inline-block; animation: fadeInUp 0.3s ease-out; }
-#emperor-badge:hover { background: rgba(78,204,163,0.15); border-color: #4ecca3; transform: translateY(-1px); }
+#emperor-badge:hover { background: rgba(46,125,50,0.12); border-color: #2e7d32; transform: translateY(-1px); }
 #emperor-badge .emperor-name { font-weight: 700; }
-#emperor-badge .emperor-dynasty { color: #8b949e; }
-#map { flex: 1; box-shadow: inset 0 0 80px rgba(0,0,0,0.4); }
-#controls { background: linear-gradient(180deg, rgba(13,17,23,0.97) 0%, rgba(22,27,37,0.99) 100%); padding: 10px 24px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #c9a959; z-index: 1000; flex-wrap: wrap; backdrop-filter: blur(12px); position: relative; }
-#controls::before { content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,169,89,0.2), transparent); }
-#controls label { font-size: 0.78rem; color: #c9a959; white-space: nowrap; }
-#event-display { font-size: 0.72rem; color: #ffd700; flex: 1; min-width: 180px; text-align: center; line-height: 1.4; padding: 5px 14px; background: linear-gradient(135deg, rgba(201,169,89,0.08), rgba(201,169,89,0.03)); border: 1px solid rgba(201,169,89,0.15); border-radius: 8px; transition: all 0.3s ease; position: relative; overflow: hidden; }
-#event-display::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.03), transparent); opacity: 0; transition: 0.5s; }
-#event-display.has-event::before { opacity: 1; }
+#emperor-badge .emperor-dynasty { color: #8b7355; }
+#map { flex: 1; }
+#controls { background: linear-gradient(180deg, #faf6ef 0%, #f4ede4 100%); padding: 10px 24px; display: flex; align-items: center; gap: 14px; border-top: 2px solid #b8860b; z-index: 1000; flex-wrap: wrap; box-shadow: 0 -2px 12px rgba(0,0,0,0.05); position: relative; }
+#controls label { font-size: 0.78rem; color: #b8860b; white-space: nowrap; font-weight: 500; }
+#event-display { font-size: 0.72rem; color: #8b0000; flex: 1; min-width: 180px; text-align: center; line-height: 1.4; padding: 5px 14px; background: linear-gradient(135deg, rgba(184,134,11,0.06), rgba(184,134,11,0.02)); border: 1px solid rgba(184,134,11,0.2); border-radius: 8px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+#event-display a { color: #8b0000 !important; }
+#event-display.has-event { animation: fadeInUp 0.35s ease-out; }
 #year-display { font-size: 1.5rem; font-weight: 700; min-width: 110px; text-align: center; font-family: 'Cinzel', serif; letter-spacing: 1px; transition: color 0.4s ease; }
-#year-display.bc { color: #e94560; text-shadow: 0 0 20px rgba(233,69,96,0.2); }
-#year-display.ad { color: #4ecca3; text-shadow: 0 0 20px rgba(78,204,163,0.2); }
-#year-display.byz { color: #a855f7; text-shadow: 0 0 20px rgba(168,85,247,0.2); }
-#year-slider { flex: 1; min-width: 180px; height: 4px; -webkit-appearance: none; appearance: none; background: linear-gradient(90deg, #e94560 0%, #c9a959 30%, #4ecca3 70%, #a855f7 100%); border-radius: 2px; outline: none; cursor: pointer; transition: opacity 0.3s; }
-#year-slider:hover { opacity: 0.9; }
-#year-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e6edf3, #c0c8d8); border: 3px solid #c9a959; cursor: pointer; transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 15px rgba(201,169,89,0.3), 0 2px 8px rgba(0,0,0,0.3); }
-#year-slider::-webkit-slider-thumb:hover { transform: scale(1.25); box-shadow: 0 0 25px rgba(201,169,89,0.5), 0 4px 12px rgba(0,0,0,0.4); }
-#year-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e6edf3, #c0c8d8); border: 3px solid #c9a959; cursor: pointer; box-shadow: 0 0 15px rgba(201,169,89,0.3); }
-#city-count { font-size: 0.78rem; color: #8b949e; white-space: nowrap; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 4px; transition: 0.3s; }
-#city-count span { color: #c9a959; font-weight: 700; }
-.leaflet-container { background: #0b0f17; }
-.leaflet-popup-content-wrapper { background: rgba(22,27,37,0.97); color: #e6edf3; border: 1px solid rgba(201,169,89,0.4); border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,169,89,0.05); backdrop-filter: blur(8px); }
-.leaflet-popup-tip { background: #161b22; border: 1px solid rgba(201,169,89,0.4); }
+#year-display.bc { color: #c41e3a; }
+#year-display.ad { color: #2e7d32; }
+#year-display.byz { color: #6a1b9a; }
+#year-slider { flex: 1; min-width: 180px; height: 5px; -webkit-appearance: none; appearance: none; background: linear-gradient(90deg, #c41e3a 0%, #b8860b 30%, #2e7d32 70%, #6a1b9a 100%); border-radius: 3px; outline: none; cursor: pointer; }
+#year-slider:hover { opacity: 0.85; }
+#year-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #f0e8d5); border: 3px solid #b8860b; cursor: pointer; transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+#year-slider::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+#year-slider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #f0e8d5); border: 3px solid #b8860b; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+#city-count { font-size: 0.78rem; color: #8b7355; white-space: nowrap; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 4px; }
+#city-count span { color: #b8860b; font-weight: 700; }
+.leaflet-container { background: #e8e0d0; }
+.leaflet-popup-content-wrapper { background: rgba(255,252,245,0.98); color: #2c1810; border: 1px solid rgba(184,134,11,0.3); border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(184,134,11,0.05); }
+.leaflet-popup-tip { background: #fffcf5; border: 1px solid rgba(184,134,11,0.3); }
 .leaflet-popup-content { margin: 14px 18px; font-size: 0.85rem; }
-.leaflet-popup-content h3 { font-family: 'Cinzel', serif; color: #c9a959; margin-bottom: 4px; font-size: 0.95rem; letter-spacing: 1px; }
-.leaflet-popup-content .year-info { color: #8b949e; font-size: 0.75rem; }
-.year-info .founded { color: #4ecca3; }
-.year-info .conquered { color: #e94560; }
-.leaflet-control-zoom a { background: rgba(22,27,37,0.9) !important; color: #e6edf3 !important; border-color: rgba(201,169,89,0.3) !important; transition: 0.2s !important; backdrop-filter: blur(4px) !important; }
-.leaflet-control-zoom a:hover { background: #1c2333 !important; border-color: #c9a959 !important; }
-.road-label { background: none !important; border: none !important; font-size: 0.65rem; color: #c9a959; font-weight: 600; text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 12px #000; white-space: nowrap; pointer-events: none; opacity: 0.7; letter-spacing: 1px; transition: opacity 0.3s; }
-.road-label div { background: rgba(0,0,0,0.6); padding: 1px 5px; border-radius: 3px; backdrop-filter: blur(2px); }
+.leaflet-popup-content h3 { font-family: 'Cinzel', serif; color: #8b0000; margin-bottom: 4px; font-size: 0.95rem; letter-spacing: 1px; }
+.leaflet-popup-content .year-info { color: #8b7355; font-size: 0.75rem; }
+.year-info .founded { color: #2e7d32; }
+.year-info .conquered { color: #c41e3a; }
+.leaflet-control-zoom a { background: rgba(255,252,245,0.95) !important; color: #2c1810 !important; border-color: rgba(184,134,11,0.3) !important; transition: 0.2s !important; }
+.leaflet-control-zoom a:hover { background: #f0e8d5 !important; border-color: #b8860b !important; }
+.road-label { background: none !important; border: none !important; font-size: 0.65rem; color: #8b4513; font-weight: 700; text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 0 12px #fff; white-space: nowrap; pointer-events: none; opacity: 0.8; letter-spacing: 1px; }
+.road-label div { background: rgba(255,255,255,0.7); padding: 1px 5px; border-radius: 3px; }
 .site-marker { background: none !important; border: none !important; }
-.site-marker div { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3); }
-.site-marker div:hover { transform: scale(1.35); filter: brightness(1.3); box-shadow: 0 0 20px rgba(0,0,0,0.6); }
-label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer; }
-#play-btn { background: linear-gradient(135deg, #c9a959, #b8943e); border: none; color: #0d1117; font-size: 0.9rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; line-height: 1; box-shadow: 0 2px 8px rgba(201,169,89,0.2); }
-#play-btn:hover { transform: scale(1.12); background: linear-gradient(135deg, #d4b86a, #c9a959); box-shadow: 0 0 25px rgba(201,169,89,0.3), 0 4px 12px rgba(0,0,0,0.3); }
-#play-btn.playing { background: linear-gradient(135deg, #e94560, #d6384f); box-shadow: 0 0 25px rgba(233,69,96,0.3); }
-#play-btn.playing:hover { background: linear-gradient(135deg, #f05454, #e94560); }
+.site-marker div { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,255,255,0.5); }
+.site-marker div:hover { transform: scale(1.35); box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 2px #fff; }
+label input { accent-color: #b8860b; width: 14px; height: 14px; cursor: pointer; }
+#play-btn { background: linear-gradient(135deg, #b8860b, #a0750a); border: none; color: #fff; font-size: 0.9rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; line-height: 1; box-shadow: 0 2px 8px rgba(184,134,11,0.3); }
+#play-btn:hover { transform: scale(1.12); box-shadow: 0 4px 16px rgba(184,134,11,0.4); }
+#play-btn.playing { background: linear-gradient(135deg, #c41e3a, #a01830); box-shadow: 0 2px 8px rgba(196,30,58,0.3); }
+#play-btn.playing:hover { background: linear-gradient(135deg, #d8384f, #c41e3a); }
 .province-label { background: none !important; border: none !important; }
 #bib-panel::-webkit-scrollbar { width: 6px; }
-#bib-panel::-webkit-scrollbar-track { background: #0d1117; }
-#bib-panel::-webkit-scrollbar-thumb { background: #c9a959; border-radius: 3px; }
-#bib-panel::-webkit-scrollbar-thumb:hover { background: #d4b86a; }
-.slider-labels { display: flex; justify-content: space-between; width: 100%; font-size: 0.6rem; color: #484f58; margin-top: 2px; padding: 0 2px; }
+#bib-panel::-webkit-scrollbar-track { background: #f4ede4; }
+#bib-panel::-webkit-scrollbar-thumb { background: #b8860b; border-radius: 3px; }
+#bib-panel::-webkit-scrollbar-thumb:hover { background: #a0750a; }
+.slider-labels { display: flex; justify-content: space-between; width: 100%; font-size: 0.6rem; color: #a09080; margin-top: 2px; padding: 0 2px; }
 .slider-labels span { transition: color 0.4s; }
-.slider-labels span.active { color: #c9a959; }
+.slider-labels span.active { color: #b8860b; }
 .slider-wrapper { flex: 1; min-width: 180px; display: flex; flex-direction: column; }
-.legend { background: rgba(22,27,37,0.93); border: 1px solid rgba(201,169,89,0.3); border-radius: 12px; padding: 14px 18px; font-size: 0.7rem; max-width: 220px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,169,89,0.05); transition: 0.3s; }
-.legend:hover { border-color: rgba(201,169,89,0.5); box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
-.legend-title { font-family: 'Cinzel', serif; color: #c9a959; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; display: flex; align-items: center; gap: 8px; }
-.legend-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,169,89,0.3), transparent); }
-.legend-item { color: #e6edf3; margin: 4px 0; display: flex; align-items: center; gap: 8px; font-weight: 400; }
-.legend-item:hover { color: #fff; }
-.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 6px rgba(255,255,255,0.05); }
-.legend-icon { display: inline-flex; width: 20px; height: 20px; border-radius: 50%; align-items: center; justify-content: center; color: #fff; font-size: 10px; flex-shrink: 0; }
+.legend { background: rgba(255,252,245,0.95); border: 1px solid rgba(184,134,11,0.3); border-radius: 12px; padding: 14px 18px; font-size: 0.7rem; max-width: 220px; box-shadow: 0 4px 24px rgba(0,0,0,0.1), 0 0 0 1px rgba(184,134,11,0.05); transition: 0.3s; }
+.legend:hover { border-color: rgba(184,134,11,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+.legend-title { font-family: 'Cinzel', serif; color: #8b0000; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; display: flex; align-items: center; gap: 8px; }
+.legend-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(184,134,11,0.3), transparent); }
+.legend-item { color: #2c1810; margin: 4px 0; display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.legend-item:hover { color: #000; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-icon { display: inline-flex; width: 20px; height: 20px; border-radius: 50%; align-items: center; justify-content: center; color: #fff; font-size: 10px; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(255,255,255,0.5); }
 .legend-line { display: inline-block; width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
-.legend hr { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 8px 0; }
+.legend hr { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 8px 0; }
 .checkbox-group { display: flex; gap: 10px; align-items: center; }
-.checkbox-item { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: #c9a959; white-space: nowrap; padding: 4px 10px; border-radius: 6px; transition: all 0.2s ease; border: 1px solid transparent; }
-.checkbox-item:hover { background: rgba(201,169,89,0.08); border-color: rgba(201,169,89,0.12); }
+.checkbox-item { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: #8b7355; white-space: nowrap; padding: 4px 10px; border-radius: 6px; transition: all 0.2s ease; border: 1px solid transparent; font-weight: 500; }
+.checkbox-item:hover { background: rgba(184,134,11,0.06); border-color: rgba(184,134,11,0.15); color: #b8860b; }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-#event-display.has-event { animation: fadeInUp 0.35s ease-out; }
-@keyframes pulseGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+@keyframes pulseGlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 #year-display.pulse { animation: pulseGlow 2s infinite; }
-@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-.circle-marker { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.circle-marker:hover { filter: brightness(1.2); }
-#speed-btn { background: rgba(201,169,89,0.08); border: 1px solid rgba(201,169,89,0.15); color: #c9a959; font-size: 0.65rem; padding: 3px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600; letter-spacing: 0.5px; }
-#speed-btn:hover { background: rgba(201,169,89,0.15); border-color: rgba(201,169,89,0.3); transform: translateY(-1px); }
+.city-label { background: none !important; border: none !important; }
+.leaflet-popup-content a:hover { opacity: 0.7; }
+#year-slider:active::-webkit-slider-thumb { transform: scale(1.15); }
+#year-slider:active::-moz-range-thumb { transform: scale(1.15); }
+.leaflet-popup-content a { color: #2e7d32 !important; border-color: rgba(46,125,50,0.3) !important; }
+.leaflet-popup-content a:hover { color: #1b5e20 !important; }
+#bib-btn { background: rgba(184,134,11,0.06); border: 1px solid rgba(184,134,11,0.2); color: #b8860b; font-size: 0.7rem; padding: 3px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: 0.5px; }
+#bib-btn:hover { background: rgba(184,134,11,0.12); border-color: #b8860b; }
+#speed-btn { background: rgba(139,115,85,0.08); border: 1px solid rgba(139,115,85,0.2); color: #8b7355; font-size: 0.65rem; padding: 3px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600; letter-spacing: 0.5px; }
+#speed-btn:hover { background: rgba(139,115,85,0.15); border-color: rgba(139,115,85,0.3); transform: translateY(-1px); }
+@media (max-width: 768px) {
+  #header { padding: 6px 12px; flex-wrap: wrap; gap: 6px; }
+  #header h1 { font-size: 0.85rem; letter-spacing: 2px; }
+  #header .spqr { font-size: 1.2rem; letter-spacing: 3px; }
+  #header .subtitle { font-size: 0.6rem; }
+  #controls { padding: 6px 10px; gap: 8px; }
+  #year-display { font-size: 1.1rem; min-width: 80px; }
+  #event-display { font-size: 0.65rem; min-width: 120px; }
+  .checkbox-item { font-size: 0.7rem; padding: 2px 6px; }
+  #bib-btn, #speed-btn { font-size: 0.6rem; padding: 2px 8px; }
+  .legend { max-width: 160px; padding: 8px 10px; font-size: 0.6rem; }
+}
 </style>
 </head>
 <body>
@@ -215,170 +229,170 @@ label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer;
 
 <script>
 const cities = [
-  { name: "Roma", lat: 41.9028, lng: 12.4964, founded: -753, conquered: null, note: "Fondata nel 753 a.C., capitale dell'Impero" },
-  { name: "Costantinopoli", lat: 41.0082, lng: 28.9784, founded: -657, conquered: 330, note: "Rifondata da Costantino nel 330 d.C." },
-  { name: "Alessandria", lat: 31.2001, lng: 29.9187, founded: -331, conquered: -30, note: "Conquistata da Ottaviano nel 30 a.C." },
-  { name: "Antiochia", lat: 36.2023, lng: 36.1614, founded: -300, conquered: -64, note: "Annessa da Pompeo nel 64 a.C." },
-  { name: "Efeso", lat: 37.9395, lng: 27.3407, founded: -1000, conquered: -133, note: "Capitale della provincia d'Asia" },
-  { name: "Atene", lat: 37.9838, lng: 23.7275, founded: -3000, conquered: -146, note: "Conquistata nel 146 a.C." },
-  { name: "Corinto", lat: 37.9381, lng: 22.9325, founded: -800, conquered: -146, note: "Distrutta nel 146 a.C., rifondata da Cesare" },
-  { name: "Ravenna", lat: 44.4184, lng: 12.2035, founded: -89, conquered: -89, note: "Municipium romano dall'89 a.C." },
-  { name: "Mediolanum", lat: 45.4642, lng: 9.1900, founded: -600, conquered: -222, note: "Conquistata nel 222 a.C., capitale tardo-impero" },
-  { name: "Neapolis", lat: 40.8518, lng: 14.2681, founded: -750, conquered: -326, note: "Foederata dal 326 a.C." },
-  { name: "Capua", lat: 41.1115, lng: 14.2190, founded: -800, conquered: -338, note: "Municipium dal 338 a.C." },
-  { name: "Londinium", lat: 51.5074, lng: -0.1278, founded: 43, conquered: 43, note: "Fondata dopo l'invasione del 43 d.C." },
-  { name: "Lutetia", lat: 48.8566, lng: 2.3522, founded: -300, conquered: -52, note: "Conquistata nel 52 a.C." },
-  { name: "Lugdunum", lat: 45.7578, lng: 4.8351, founded: -43, conquered: -43, note: "Fondata nel 43 a.C., capitale delle Gallie" },
-  { name: "Massilia", lat: 43.2965, lng: 5.3698, founded: -600, conquered: -49, note: "Conquistata da Cesare nel 49 a.C." },
-  { name: "Tarraco", lat: 41.1189, lng: 1.2445, founded: -500, conquered: -218, note: "Capitale della Hispania Citerior" },
-  { name: "Corduba", lat: 37.8882, lng: -4.7794, founded: -169, conquered: -169, note: "Fondata nel 169 a.C." },
-  { name: "Emerita Augusta", lat: 38.9167, lng: -6.3333, founded: -25, conquered: -25, note: "Fondata da Augusto nel 25 a.C." },
-  { name: "Colonia Agrippina", lat: 50.9375, lng: 6.9603, founded: 50, conquered: 50, note: "Colonia romana dal 50 d.C." },
-  { name: "Augusta Treverorum", lat: 49.7596, lng: 6.6441, founded: -16, conquered: -16, note: "Fondata nel 16 a.C., capitale tetrarchica" },
-  { name: "Aquincum", lat: 47.5316, lng: 19.0503, founded: 41, conquered: 41, note: "Fondata nel 41 d.C." },
-  { name: "Vindobona", lat: 48.2082, lng: 16.3738, founded: -15, conquered: -15, note: "Fondata nel 15 a.C." },
-  { name: "Sirmium", lat: 44.9970, lng: 19.6134, founded: -400, conquered: -100, note: "Capitale tetrarchica, importante città illirica" },
-  { name: "Tessalonica", lat: 40.6401, lng: 22.9444, founded: -315, conquered: -168, note: "Capitale della Macedonia romana" },
-  { name: "Nicomedia", lat: 40.7654, lng: 29.9401, founded: -712, conquered: -74, note: "Capitale tetrarchica orientale" },
-  { name: "Damasco", lat: 33.5138, lng: 36.2765, founded: -3000, conquered: -64, note: "Annessa nel 64 a.C." },
-  { name: "Gerusalemme", lat: 31.7683, lng: 35.2137, founded: -2000, conquered: -63, note: "Conquistata da Pompeo nel 63 a.C." },
-  { name: "Palmira", lat: 34.5610, lng: 38.2670, founded: -100, conquered: -50, note: "Annessa nel I sec. a.C." },
-  { name: "Leptis Magna", lat: 32.6386, lng: 14.2874, founded: -700, conquered: -46, note: "Città natale di Settimio Severo" },
-  { name: "Carthago Nova", lat: 37.6051, lng: -0.9853, founded: -227, conquered: -209, note: "Conquistata da Scipione nel 209 a.C." },
-  { name: "Gades", lat: 36.5271, lng: -6.2886, founded: -1100, conquered: -206, note: "Antico porto fenicio, alleata di Roma" },
-  { name: "Hispalis", lat: 37.3891, lng: -5.9845, founded: -800, conquered: -206, note: "Importante centro della Baetica" },
-  { name: "Barcino", lat: 41.3874, lng: 2.1686, founded: -15, conquered: -15, note: "Fondata da Augusto nel 15 a.C." },
-  { name: "Valentia", lat: 39.4699, lng: -0.3763, founded: -138, conquered: -138, note: "Fondata nel 138 a.C." },
-  { name: "Caesarea Maritima", lat: 32.5000, lng: 34.8167, founded: -22, conquered: -22, note: "Fondata da Erode, prefettura della Giudea" },
-  { name: "Arelate", lat: 43.6764, lng: 4.6300, founded: -600, conquered: -123, note: "Importante porto della Gallia Narbonense" },
-  { name: "Nemausus", lat: 43.8367, lng: 4.3601, founded: -400, conquered: -121, note: "Capitale della Gallia Narbonense" },
-  { name: "Narbo Martius", lat: 43.1848, lng: 3.0034, founded: -118, conquered: -118, note: "Prima colonia romana in Gallia" },
-  { name: "Aquae Sextiae", lat: 43.5297, lng: 5.4474, founded: -122, conquered: -122, note: "Fondata nel 122 a.C." },
-  { name: "Burdigala", lat: 44.8378, lng: -0.5792, founded: -300, conquered: -56, note: "Capitale dell'Aquitania" },
-  { name: "Tolosa", lat: 43.6047, lng: 1.4442, founded: -400, conquered: -106, note: "Conquistata nel 106 a.C." },
-  { name: "Vienna", lat: 45.5256, lng: 4.8747, founded: -100, conquered: -100, note: "Importante città della Gallia Narbonense" },
-  { name: "Augusta Vindelicum", lat: 48.3705, lng: 10.8978, founded: -15, conquered: -15, note: "Capitale della Rezia" },
-  { name: "Castra Regina", lat: 49.0196, lng: 12.0976, founded: 179, conquered: 179, note: "Fondata nel 179 d.C." },
-  { name: "Eboracum", lat: 53.9590, lng: -1.0815, founded: 71, conquered: 71, note: "Capitale della Britannia Inferiore" },
-  { name: "Deva Victrix", lat: 53.1915, lng: -2.8911, founded: 74, conquered: 74, note: "Fortezza legionaria in Britannia" },
-  { name: "Hadrianopolis", lat: 41.6732, lng: 26.5707, founded: 125, conquered: 125, note: "Fondata da Adriano nel 125 d.C." },
-  { name: "Serdica", lat: 42.6977, lng: 23.3219, founded: -200, conquered: -29, note: "Conquistata nel 29 a.C." },
-  { name: "Naissus", lat: 43.3209, lng: 21.8954, founded: -100, conquered: -100, note: "Città natale di Costantino il Grande" },
-  { name: "Singidunum", lat: 44.7866, lng: 20.4489, founded: -100, conquered: -100, note: "Importante base legionaria sul Danubio" },
-  { name: "Salona", lat: 43.5398, lng: 16.4828, founded: -400, conquered: -100, note: "Capitale della Dalmazia, luogo di nascita di Diocleziano" },
-  { name: "Dyrrachium", lat: 41.3215, lng: 19.4505, founded: -627, conquered: -229, note: "Importante porto sull'Adriatico" },
-  { name: "Apollonia", lat: 40.7200, lng: 19.4700, founded: -600, conquered: -229, note: "Celebre per la sua scuola filosofica" },
-  { name: "Brundisium", lat: 40.6415, lng: 17.9489, founded: -300, conquered: -267, note: "Porto principale per la Grecia" },
-  { name: "Tarentum", lat: 40.4766, lng: 17.2298, founded: -706, conquered: -272, note: "Conquistata nel 272 a.C." },
-  { name: "Siracusa", lat: 37.0755, lng: 15.2866, founded: -734, conquered: -212, note: "Conquistata da Marcello nel 212 a.C." },
-  { name: "Panormus", lat: 38.1157, lng: 13.3613, founded: -734, conquered: -254, note: "Conquistata nel 254 a.C." },
-  { name: "Cartagine", lat: 36.8560, lng: 10.3187, founded: -814, conquered: -146, note: "Distrutta nel 146 a.C., rifondata come colonia" },
-  { name: "Cirta", lat: 36.3661, lng: 6.6142, founded: -300, conquered: -46, note: "Capitale della Numidia romana" },
-  { name: "Thamugadi", lat: 35.4850, lng: 6.4650, founded: 100, conquered: 100, note: "Fondata da Traiano nel 100 d.C." },
-  { name: "Biserta", lat: 37.2746, lng: 9.8739, founded: -800, conquered: -146, note: "Antico porto punico" },
-  { name: "Utica", lat: 37.0570, lng: 10.0610, founded: -800, conquered: -146, note: "Prima capitale della provincia d'Africa" },
-  { name: "Lilibeo", lat: 37.7977, lng: 12.4368, founded: -396, conquered: -241, note: "Ultima roccaforte cartaginese in Sicilia" },
-  { name: "Vibo Valentia", lat: 38.6761, lng: 16.1057, founded: -500, conquered: -192, note: "Colonia romana dal 192 a.C." },
-  { name: "Pompei", lat: 40.7500, lng: 14.4860, founded: -700, conquered: -310, note: "Distrutta dall'eruzione del Vesuvio nel 79 d.C." },
-  { name: "Ercolano", lat: 40.8058, lng: 14.3475, founded: -600, conquered: -310, note: "Distrutta dall'eruzione del Vesuvio nel 79 d.C." },
-  { name: "Cuma", lat: 40.8486, lng: 14.0517, founded: -750, conquered: -338, note: "La più antica colonia greca in Italia" },
-  { name: "Puteoli", lat: 40.8251, lng: 14.1250, founded: -600, conquered: -338, note: "Principale porto commerciale di Roma" },
-  { name: "Ostia", lat: 41.7567, lng: 12.3017, founded: -620, conquered: -620, note: "Porto di Roma, fondata da Anco Marzio" },
-  { name: "Ariminum", lat: 44.0594, lng: 12.5653, founded: -268, conquered: -268, note: "Colonia romana dal 268 a.C." },
-  { name: "Placentia", lat: 45.0526, lng: 9.6949, founded: -218, conquered: -218, note: "Colonia romana dal 218 a.C." },
-  { name: "Bononia", lat: 44.4949, lng: 11.3426, founded: -1000, conquered: -189, note: "Colonia romana dal 189 a.C." },
-  { name: "Patavium", lat: 45.4064, lng: 11.8768, founded: -1100, conquered: -49, note: "Città natale di Livio, municipium dal 49 a.C." },
-  { name: "Aquileia", lat: 45.7747, lng: 13.3687, founded: -181, conquered: -181, note: "Fondata nel 181 a.C., importante città commerciale" },
-  { name: "Tergeste", lat: 45.6495, lng: 13.7768, founded: -300, conquered: -177, note: "Municipium romano" },
-  { name: "Pola", lat: 44.8666, lng: 13.8495, founded: -300, conquered: -177, note: "Importante porto dell'Istria" },
-  { name: "Iader", lat: 44.1171, lng: 15.2330, founded: -400, conquered: -100, note: "Municipium romano in Dalmazia" },
-  { name: "Narona", lat: 43.0500, lng: 17.5400, founded: -300, conquered: -156, note: "Antica colonia romana in Dalmazia" },
-  { name: "Carnuntum", lat: 48.1167, lng: 16.8667, founded: 50, conquered: 50, note: "Importante base legionaria sul Danubio" },
-  { name: "Lauriacum", lat: 48.2122, lng: 14.2819, founded: 200, conquered: 200, note: "Fortezza legionaria del Norico" },
-  { name: "Flavia Solva", lat: 46.6667, lng: 15.3333, founded: 70, conquered: 70, note: "Municipium romano nel Norico" },
-  { name: "Celeia", lat: 46.2364, lng: 15.2676, founded: -200, conquered: -15, note: "Municipium romano, importante nodo stradale" },
-  { name: "Emona", lat: 46.0500, lng: 14.5000, founded: -100, conquered: -100, note: "Antica città sul sito di Lubiana" },
-  { name: "Savaria", lat: 47.2537, lng: 16.6826, founded: 50, conquered: 50, note: "Municipium romano in Pannonia" },
-  { name: "Sopianae", lat: 46.0758, lng: 18.2288, founded: 100, conquered: 100, note: "Importante città della Pannonia" },
-  { name: "Mogontiacum", lat: 49.9995, lng: 8.2710, founded: -13, conquered: -13, note: "Base legionaria in Germania Superior" },
-  { name: "Argentoratum", lat: 48.5733, lng: 7.7521, founded: -12, conquered: -12, note: "Strasburgo, base legionaria sul Reno" },
-  { name: "Augusta Raurica", lat: 47.5290, lng: 7.7220, founded: -44, conquered: -44, note: "Colonia romana in Rezia" },
-  { name: "Lindum", lat: 53.2268, lng: -0.5405, founded: 60, conquered: 60, note: "Lincoln, colonia romana in Britannia" },
-  { name: "Camulodunum", lat: 51.8929, lng: 0.9030, founded: 43, conquered: 43, note: "Colchester, prima capitale della Britannia romana" },
-  { name: "Verulamium", lat: 51.7536, lng: -0.3394, founded: 50, conquered: 50, note: "St. Albans, municipium romano" },
-  { name: "Corinium Dobunnorum", lat: 51.7172, lng: -1.9685, founded: 75, conquered: 75, note: "Cirencester, importante città della Britannia" },
-  { name: "Isca Dumnoniorum", lat: 50.7225, lng: -3.5261, founded: 55, conquered: 55, note: "Exeter, città romana in Britannia" },
-  { name: "Glevum", lat: 51.8642, lng: -2.2382, founded: 97, conquered: 97, note: "Gloucester, colonia romana fondata da Nerva" },
-  { name: "Beneventum", lat: 41.1298, lng: 14.7854, founded: -400, conquered: -268, note: "Importante nodo stradale, Capua-Apulia" },
-  { name: "Canusium", lat: 41.2320, lng: 16.0438, founded: -400, conquered: -318, note: "Importante città della Puglia romana" },
-  { name: "Venusia", lat: 40.9667, lng: 15.8167, founded: -500, conquered: -291, note: "Città natale di Orazio, colonia latina" },
-  { name: "Caesaraugusta", lat: 41.6488, lng: -0.8891, founded: -14, conquered: -14, note: "Saragozza, fondata da Augusto nel 14 a.C." },
-  { name: "Numantia", lat: 41.8200, lng: -2.4300, founded: -300, conquered: -133, note: "Distrutta da Scipione Emiliano nel 133 a.C." },
-  { name: "Malaca", lat: 36.7213, lng: -4.4214, founded: -800, conquered: -206, note: "Municipium romano, importante porto" },
-  { name: "Hasta Regia", lat: 36.7500, lng: -6.0833, founded: -500, conquered: -206, note: "Antica città della Baetica" },
-  { name: "Ebusus", lat: 38.9098, lng: 1.4326, founded: -654, conquered: -123, note: "Ibiza, conquistata da Metello nel 123 a.C." },
-  { name: "Messana", lat: 38.1938, lng: 15.5540, founded: -800, conquered: -264, note: "Importante base navale romana" },
-  { name: "Agrigentum", lat: 37.3107, lng: 13.5765, founded: -580, conquered: -262, note: "Conquistata nel 262 a.C." },
+  { name: "Roma", lat: 41.9028, lng: 12.4964, founded: -753, conquered: null, note: "Fondata nel 753 a.C., capitale dell'Impero" , wiki: "https://it.wikipedia.org/wiki/Roma_(citt�_antica)" },
+  { name: "Costantinopoli", lat: 41.0082, lng: 28.9784, founded: -657, conquered: 330, note: "Rifondata da Costantino nel 330 d.C." , wiki: "https://it.wikipedia.org/wiki/Costantinopoli" },
+  { name: "Alessandria", lat: 31.2001, lng: 29.9187, founded: -331, conquered: -30, note: "Conquistata da Ottaviano nel 30 a.C." , wiki: "https://it.wikipedia.org/wiki/Alessandria_d'Egitto" },
+  { name: "Antiochia", lat: 36.2023, lng: 36.1614, founded: -300, conquered: -64, note: "Annessa da Pompeo nel 64 a.C." , wiki: "https://it.wikipedia.org/wiki/Antiochia_di_Siria" },
+  { name: "Efeso", lat: 37.9395, lng: 27.3407, founded: -1000, conquered: -133, note: "Capitale della provincia d'Asia" , wiki: "https://it.wikipedia.org/wiki/Efeso" },
+  { name: "Atene", lat: 37.9838, lng: 23.7275, founded: -3000, conquered: -146, note: "Conquistata nel 146 a.C." , wiki: "https://it.wikipedia.org/wiki/Atene" },
+  { name: "Corinto", lat: 37.9381, lng: 22.9325, founded: -800, conquered: -146, note: "Distrutta nel 146 a.C., rifondata da Cesare" , wiki: "https://it.wikipedia.org/wiki/Corinto_(citt�_antica)" },
+  { name: "Ravenna", lat: 44.4184, lng: 12.2035, founded: -89, conquered: -89, note: "Municipium romano dall'89 a.C." , wiki: "https://it.wikipedia.org/wiki/Ravenna" },
+  { name: "Mediolanum", lat: 45.4642, lng: 9.1900, founded: -600, conquered: -222, note: "Conquistata nel 222 a.C., capitale tardo-impero" , wiki: "https://it.wikipedia.org/wiki/Milano" },
+  { name: "Neapolis", lat: 40.8518, lng: 14.2681, founded: -750, conquered: -326, note: "Foederata dal 326 a.C." , wiki: "https://it.wikipedia.org/wiki/Napoli" },
+  { name: "Capua", lat: 41.1115, lng: 14.2190, founded: -800, conquered: -338, note: "Municipium dal 338 a.C." , wiki: "https://it.wikipedia.org/wiki/Capua_(citt�_antica)" },
+  { name: "Londinium", lat: 51.5074, lng: -0.1278, founded: 43, conquered: 43, note: "Fondata dopo l'invasione del 43 d.C." , wiki: "https://it.wikipedia.org/wiki/Londra" },
+  { name: "Lutetia", lat: 48.8566, lng: 2.3522, founded: -300, conquered: -52, note: "Conquistata nel 52 a.C." , wiki: "https://it.wikipedia.org/wiki/Parigi" },
+  { name: "Lugdunum", lat: 45.7578, lng: 4.8351, founded: -43, conquered: -43, note: "Fondata nel 43 a.C., capitale delle Gallie" , wiki: "https://it.wikipedia.org/wiki/Lione" },
+  { name: "Massilia", lat: 43.2965, lng: 5.3698, founded: -600, conquered: -49, note: "Conquistata da Cesare nel 49 a.C." , wiki: "https://it.wikipedia.org/wiki/Marsiglia" },
+  { name: "Tarraco", lat: 41.1189, lng: 1.2445, founded: -500, conquered: -218, note: "Capitale della Hispania Citerior" , wiki: "https://it.wikipedia.org/wiki/Tarragona" },
+  { name: "Corduba", lat: 37.8882, lng: -4.7794, founded: -169, conquered: -169, note: "Fondata nel 169 a.C." , wiki: "https://it.wikipedia.org/wiki/C�rdoba_(Spagna)" },
+  { name: "Emerita Augusta", lat: 38.9167, lng: -6.3333, founded: -25, conquered: -25, note: "Fondata da Augusto nel 25 a.C." , wiki: "https://it.wikipedia.org/wiki/M�rida_(Spagna)" },
+  { name: "Colonia Agrippina", lat: 50.9375, lng: 6.9603, founded: 50, conquered: 50, note: "Colonia romana dal 50 d.C." , wiki: "https://it.wikipedia.org/wiki/Colonia_(Germania)" },
+  { name: "Augusta Treverorum", lat: 49.7596, lng: 6.6441, founded: -16, conquered: -16, note: "Fondata nel 16 a.C., capitale tetrarchica" , wiki: "https://it.wikipedia.org/wiki/Treviri" },
+  { name: "Aquincum", lat: 47.5316, lng: 19.0503, founded: 41, conquered: 41, note: "Fondata nel 41 d.C." , wiki: "https://it.wikipedia.org/wiki/Budapest" },
+  { name: "Vindobona", lat: 48.2082, lng: 16.3738, founded: -15, conquered: -15, note: "Fondata nel 15 a.C." , wiki: "https://it.wikipedia.org/wiki/Vienna" },
+  { name: "Sirmium", lat: 44.9970, lng: 19.6134, founded: -400, conquered: -100, note: "Capitale tetrarchica, importante città illirica" , wiki: "https://it.wikipedia.org/wiki/Sremska_Mitrovica" },
+  { name: "Tessalonica", lat: 40.6401, lng: 22.9444, founded: -315, conquered: -168, note: "Capitale della Macedonia romana" , wiki: "https://it.wikipedia.org/wiki/Salonicco" },
+  { name: "Nicomedia", lat: 40.7654, lng: 29.9401, founded: -712, conquered: -74, note: "Capitale tetrarchica orientale" , wiki: "https://it.wikipedia.org/wiki/Nicomedia" },
+  { name: "Damasco", lat: 33.5138, lng: 36.2765, founded: -3000, conquered: -64, note: "Annessa nel 64 a.C." , wiki: "https://it.wikipedia.org/wiki/Damasco" },
+  { name: "Gerusalemme", lat: 31.7683, lng: 35.2137, founded: -2000, conquered: -63, note: "Conquistata da Pompeo nel 63 a.C." , wiki: "https://it.wikipedia.org/wiki/Gerusalemme" },
+  { name: "Palmira", lat: 34.5610, lng: 38.2670, founded: -100, conquered: -50, note: "Annessa nel I sec. a.C." , wiki: "https://it.wikipedia.org/wiki/Palmira" },
+  { name: "Leptis Magna", lat: 32.6386, lng: 14.2874, founded: -700, conquered: -46, note: "Città natale di Settimio Severo" , wiki: "https://it.wikipedia.org/wiki/Leptis_Magna" },
+  { name: "Carthago Nova", lat: 37.6051, lng: -0.9853, founded: -227, conquered: -209, note: "Conquistata da Scipione nel 209 a.C." , wiki: "https://it.wikipedia.org/wiki/Cartagena_(Spagna)" },
+  { name: "Gades", lat: 36.5271, lng: -6.2886, founded: -1100, conquered: -206, note: "Antico porto fenicio, alleata di Roma" , wiki: "https://it.wikipedia.org/wiki/Cadice" },
+  { name: "Hispalis", lat: 37.3891, lng: -5.9845, founded: -800, conquered: -206, note: "Importante centro della Baetica" , wiki: "https://it.wikipedia.org/wiki/Siviglia" },
+  { name: "Barcino", lat: 41.3874, lng: 2.1686, founded: -15, conquered: -15, note: "Fondata da Augusto nel 15 a.C." , wiki: "https://it.wikipedia.org/wiki/Barcellona" },
+  { name: "Valentia", lat: 39.4699, lng: -0.3763, founded: -138, conquered: -138, note: "Fondata nel 138 a.C." , wiki: "https://it.wikipedia.org/wiki/Valencia" },
+  { name: "Caesarea Maritima", lat: 32.5000, lng: 34.8167, founded: -22, conquered: -22, note: "Fondata da Erode, prefettura della Giudea" , wiki: "https://it.wikipedia.org/wiki/Cesarea_marittima" },
+  { name: "Arelate", lat: 43.6764, lng: 4.6300, founded: -600, conquered: -123, note: "Importante porto della Gallia Narbonense" , wiki: "https://it.wikipedia.org/wiki/Arles" },
+  { name: "Nemausus", lat: 43.8367, lng: 4.3601, founded: -400, conquered: -121, note: "Capitale della Gallia Narbonense" , wiki: "https://it.wikipedia.org/wiki/N�mes" },
+  { name: "Narbo Martius", lat: 43.1848, lng: 3.0034, founded: -118, conquered: -118, note: "Prima colonia romana in Gallia" , wiki: "https://it.wikipedia.org/wiki/Narbona" },
+  { name: "Aquae Sextiae", lat: 43.5297, lng: 5.4474, founded: -122, conquered: -122, note: "Fondata nel 122 a.C." , wiki: "https://it.wikipedia.org/wiki/Aix-en-Provence" },
+  { name: "Burdigala", lat: 44.8378, lng: -0.5792, founded: -300, conquered: -56, note: "Capitale dell'Aquitania" , wiki: "https://it.wikipedia.org/wiki/Bordeaux" },
+  { name: "Tolosa", lat: 43.6047, lng: 1.4442, founded: -400, conquered: -106, note: "Conquistata nel 106 a.C." , wiki: "https://it.wikipedia.org/wiki/Tolosa_(Francia)" },
+  { name: "Vienna", lat: 45.5256, lng: 4.8747, founded: -100, conquered: -100, note: "Importante città della Gallia Narbonense" , wiki: "https://it.wikipedia.org/wiki/Vienne_(Francia)" },
+  { name: "Augusta Vindelicum", lat: 48.3705, lng: 10.8978, founded: -15, conquered: -15, note: "Capitale della Rezia" , wiki: "https://it.wikipedia.org/wiki/Augusta_(Germania)" },
+  { name: "Castra Regina", lat: 49.0196, lng: 12.0976, founded: 179, conquered: 179, note: "Fondata nel 179 d.C." , wiki: "https://it.wikipedia.org/wiki/Ratisbona" },
+  { name: "Eboracum", lat: 53.9590, lng: -1.0815, founded: 71, conquered: 71, note: "Capitale della Britannia Inferiore" , wiki: "https://it.wikipedia.org/wiki/York" },
+  { name: "Deva Victrix", lat: 53.1915, lng: -2.8911, founded: 74, conquered: 74, note: "Fortezza legionaria in Britannia" , wiki: "https://it.wikipedia.org/wiki/Chester" },
+  { name: "Hadrianopolis", lat: 41.6732, lng: 26.5707, founded: 125, conquered: 125, note: "Fondata da Adriano nel 125 d.C." , wiki: "https://it.wikipedia.org/wiki/Edirne" },
+  { name: "Serdica", lat: 42.6977, lng: 23.3219, founded: -200, conquered: -29, note: "Conquistata nel 29 a.C." , wiki: "https://it.wikipedia.org/wiki/Sofia" },
+  { name: "Naissus", lat: 43.3209, lng: 21.8954, founded: -100, conquered: -100, note: "Città natale di Costantino il Grande" , wiki: "https://it.wikipedia.org/wiki/Ni�" },
+  { name: "Singidunum", lat: 44.7866, lng: 20.4489, founded: -100, conquered: -100, note: "Importante base legionaria sul Danubio" , wiki: "https://it.wikipedia.org/wiki/Belgrado" },
+  { name: "Salona", lat: 43.5398, lng: 16.4828, founded: -400, conquered: -100, note: "Capitale della Dalmazia, luogo di nascita di Diocleziano" , wiki: "https://it.wikipedia.org/wiki/Salona" },
+  { name: "Dyrrachium", lat: 41.3215, lng: 19.4505, founded: -627, conquered: -229, note: "Importante porto sull'Adriatico" , wiki: "https://it.wikipedia.org/wiki/Durazzo" },
+  { name: "Apollonia", lat: 40.7200, lng: 19.4700, founded: -600, conquered: -229, note: "Celebre per la sua scuola filosofica" , wiki: "https://it.wikipedia.org/wiki/Apollonia_(Illiria)" },
+  { name: "Brundisium", lat: 40.6415, lng: 17.9489, founded: -300, conquered: -267, note: "Porto principale per la Grecia" , wiki: "https://it.wikipedia.org/wiki/Brindisi" },
+  { name: "Tarentum", lat: 40.4766, lng: 17.2298, founded: -706, conquered: -272, note: "Conquistata nel 272 a.C." , wiki: "https://it.wikipedia.org/wiki/Taranto" },
+  { name: "Siracusa", lat: 37.0755, lng: 15.2866, founded: -734, conquered: -212, note: "Conquistata da Marcello nel 212 a.C." , wiki: "https://it.wikipedia.org/wiki/Siracusa" },
+  { name: "Panormus", lat: 38.1157, lng: 13.3613, founded: -734, conquered: -254, note: "Conquistata nel 254 a.C." , wiki: "https://it.wikipedia.org/wiki/Palermo" },
+  { name: "Cartagine", lat: 36.8560, lng: 10.3187, founded: -814, conquered: -146, note: "Distrutta nel 146 a.C., rifondata come colonia" , wiki: "https://it.wikipedia.org/wiki/Cartagine" },
+  { name: "Cirta", lat: 36.3661, lng: 6.6142, founded: -300, conquered: -46, note: "Capitale della Numidia romana" , wiki: "https://it.wikipedia.org/wiki/Costantina" },
+  { name: "Thamugadi", lat: 35.4850, lng: 6.4650, founded: 100, conquered: 100, note: "Fondata da Traiano nel 100 d.C." , wiki: "https://it.wikipedia.org/wiki/Timgad" },
+  { name: "Biserta", lat: 37.2746, lng: 9.8739, founded: -800, conquered: -146, note: "Antico porto punico" , wiki: "https://it.wikipedia.org/wiki/Biserta" },
+  { name: "Utica", lat: 37.0570, lng: 10.0610, founded: -800, conquered: -146, note: "Prima capitale della provincia d'Africa" , wiki: "https://it.wikipedia.org/wiki/Utica_(citt�_antica)" },
+  { name: "Lilibeo", lat: 37.7977, lng: 12.4368, founded: -396, conquered: -241, note: "Ultima roccaforte cartaginese in Sicilia" , wiki: "https://it.wikipedia.org/wiki/Marsala" },
+  { name: "Vibo Valentia", lat: 38.6761, lng: 16.1057, founded: -500, conquered: -192, note: "Colonia romana dal 192 a.C." , wiki: "https://it.wikipedia.org/wiki/Vibo_Valentia" },
+  { name: "Pompei", lat: 40.7500, lng: 14.4860, founded: -700, conquered: -310, note: "Distrutta dall'eruzione del Vesuvio nel 79 d.C." , wiki: "https://it.wikipedia.org/wiki/Pompei" },
+  { name: "Ercolano", lat: 40.8058, lng: 14.3475, founded: -600, conquered: -310, note: "Distrutta dall'eruzione del Vesuvio nel 79 d.C." , wiki: "https://it.wikipedia.org/wiki/Ercolano_(citt�_antica)" },
+  { name: "Cuma", lat: 40.8486, lng: 14.0517, founded: -750, conquered: -338, note: "La più antica colonia greca in Italia" , wiki: "https://it.wikipedia.org/wiki/Cuma_(citt�_antica)" },
+  { name: "Puteoli", lat: 40.8251, lng: 14.1250, founded: -600, conquered: -338, note: "Principale porto commerciale di Roma" , wiki: "https://it.wikipedia.org/wiki/Pozzuoli" },
+  { name: "Ostia", lat: 41.7567, lng: 12.3017, founded: -620, conquered: -620, note: "Porto di Roma, fondata da Anco Marzio" , wiki: "https://it.wikipedia.org/wiki/Ostia_(citt�_antica)" },
+  { name: "Ariminum", lat: 44.0594, lng: 12.5653, founded: -268, conquered: -268, note: "Colonia romana dal 268 a.C." , wiki: "https://it.wikipedia.org/wiki/Rimini" },
+  { name: "Placentia", lat: 45.0526, lng: 9.6949, founded: -218, conquered: -218, note: "Colonia romana dal 218 a.C." , wiki: "https://it.wikipedia.org/wiki/Piacenza" },
+  { name: "Bononia", lat: 44.4949, lng: 11.3426, founded: -1000, conquered: -189, note: "Colonia romana dal 189 a.C." , wiki: "https://it.wikipedia.org/wiki/Bologna" },
+  { name: "Patavium", lat: 45.4064, lng: 11.8768, founded: -1100, conquered: -49, note: "Città natale di Livio, municipium dal 49 a.C." , wiki: "https://it.wikipedia.org/wiki/Padova" },
+  { name: "Aquileia", lat: 45.7747, lng: 13.3687, founded: -181, conquered: -181, note: "Fondata nel 181 a.C., importante città commerciale" , wiki: "https://it.wikipedia.org/wiki/Aquileia" },
+  { name: "Tergeste", lat: 45.6495, lng: 13.7768, founded: -300, conquered: -177, note: "Municipium romano" , wiki: "https://it.wikipedia.org/wiki/Trieste" },
+  { name: "Pola", lat: 44.8666, lng: 13.8495, founded: -300, conquered: -177, note: "Importante porto dell'Istria" , wiki: "https://it.wikipedia.org/wiki/Pola" },
+  { name: "Iader", lat: 44.1171, lng: 15.2330, founded: -400, conquered: -100, note: "Municipium romano in Dalmazia" , wiki: "https://it.wikipedia.org/wiki/Zara_(Croazia)" },
+  { name: "Narona", lat: 43.0500, lng: 17.5400, founded: -300, conquered: -156, note: "Antica colonia romana in Dalmazia" , wiki: "https://it.wikipedia.org/wiki/Narona" },
+  { name: "Carnuntum", lat: 48.1167, lng: 16.8667, founded: 50, conquered: 50, note: "Importante base legionaria sul Danubio" , wiki: "https://it.wikipedia.org/wiki/Carnuntum" },
+  { name: "Lauriacum", lat: 48.2122, lng: 14.2819, founded: 200, conquered: 200, note: "Fortezza legionaria del Norico" , wiki: "https://it.wikipedia.org/wiki/Lauriacum" },
+  { name: "Flavia Solva", lat: 46.6667, lng: 15.3333, founded: 70, conquered: 70, note: "Municipium romano nel Norico" , wiki: "https://it.wikipedia.org/wiki/Flavia_Solva" },
+  { name: "Celeia", lat: 46.2364, lng: 15.2676, founded: -200, conquered: -15, note: "Municipium romano, importante nodo stradale" , wiki: "https://it.wikipedia.org/wiki/Celje" },
+  { name: "Emona", lat: 46.0500, lng: 14.5000, founded: -100, conquered: -100, note: "Antica città sul sito di Lubiana" , wiki: "https://it.wikipedia.org/wiki/Lubiana" },
+  { name: "Savaria", lat: 47.2537, lng: 16.6826, founded: 50, conquered: 50, note: "Municipium romano in Pannonia" , wiki: "https://it.wikipedia.org/wiki/Savaria" },
+  { name: "Sopianae", lat: 46.0758, lng: 18.2288, founded: 100, conquered: 100, note: "Importante città della Pannonia" , wiki: "https://it.wikipedia.org/wiki/P�cs" },
+  { name: "Mogontiacum", lat: 49.9995, lng: 8.2710, founded: -13, conquered: -13, note: "Base legionaria in Germania Superior" , wiki: "https://it.wikipedia.org/wiki/Magonza" },
+  { name: "Argentoratum", lat: 48.5733, lng: 7.7521, founded: -12, conquered: -12, note: "Strasburgo, base legionaria sul Reno" , wiki: "https://it.wikipedia.org/wiki/Strasburgo" },
+  { name: "Augusta Raurica", lat: 47.5290, lng: 7.7220, founded: -44, conquered: -44, note: "Colonia romana in Rezia" , wiki: "https://it.wikipedia.org/wiki/Augusta_Raurica" },
+  { name: "Lindum", lat: 53.2268, lng: -0.5405, founded: 60, conquered: 60, note: "Lincoln, colonia romana in Britannia" , wiki: "https://it.wikipedia.org/wiki/Lincoln_(Regno_Unito)" },
+  { name: "Camulodunum", lat: 51.8929, lng: 0.9030, founded: 43, conquered: 43, note: "Colchester, prima capitale della Britannia romana" , wiki: "https://it.wikipedia.org/wiki/Colchester" },
+  { name: "Verulamium", lat: 51.7536, lng: -0.3394, founded: 50, conquered: 50, note: "St. Albans, municipium romano" , wiki: "https://it.wikipedia.org/wiki/St._Albans" },
+  { name: "Corinium Dobunnorum", lat: 51.7172, lng: -1.9685, founded: 75, conquered: 75, note: "Cirencester, importante città della Britannia" , wiki: "https://it.wikipedia.org/wiki/Cirencester" },
+  { name: "Isca Dumnoniorum", lat: 50.7225, lng: -3.5261, founded: 55, conquered: 55, note: "Exeter, città romana in Britannia" , wiki: "https://it.wikipedia.org/wiki/Exeter" },
+  { name: "Glevum", lat: 51.8642, lng: -2.2382, founded: 97, conquered: 97, note: "Gloucester, colonia romana fondata da Nerva" , wiki: "https://it.wikipedia.org/wiki/Gloucester" },
+  { name: "Beneventum", lat: 41.1298, lng: 14.7854, founded: -400, conquered: -268, note: "Importante nodo stradale, Capua-Apulia" , wiki: "https://it.wikipedia.org/wiki/Benevento" },
+  { name: "Canusium", lat: 41.2320, lng: 16.0438, founded: -400, conquered: -318, note: "Importante città della Puglia romana" , wiki: "https://it.wikipedia.org/wiki/Canosa_di_Puglia" },
+  { name: "Venusia", lat: 40.9667, lng: 15.8167, founded: -500, conquered: -291, note: "Città natale di Orazio, colonia latina" , wiki: "https://it.wikipedia.org/wiki/Venosa" },
+  { name: "Caesaraugusta", lat: 41.6488, lng: -0.8891, founded: -14, conquered: -14, note: "Saragozza, fondata da Augusto nel 14 a.C." , wiki: "https://it.wikipedia.org/wiki/Saragozza" },
+  { name: "Numantia", lat: 41.8200, lng: -2.4300, founded: -300, conquered: -133, note: "Distrutta da Scipione Emiliano nel 133 a.C." , wiki: "https://it.wikipedia.org/wiki/Numancia" },
+  { name: "Malaca", lat: 36.7213, lng: -4.4214, founded: -800, conquered: -206, note: "Municipium romano, importante porto" , wiki: "https://it.wikipedia.org/wiki/M�laga" },
+  { name: "Hasta Regia", lat: 36.7500, lng: -6.0833, founded: -500, conquered: -206, note: "Antica città della Baetica" , wiki: "https://it.wikipedia.org/wiki/Hasta_Regia" },
+  { name: "Ebusus", lat: 38.9098, lng: 1.4326, founded: -654, conquered: -123, note: "Ibiza, conquistata da Metello nel 123 a.C." , wiki: "https://it.wikipedia.org/wiki/Ibiza" },
+  { name: "Messana", lat: 38.1938, lng: 15.5540, founded: -800, conquered: -264, note: "Importante base navale romana" , wiki: "https://it.wikipedia.org/wiki/Messina" },
+  { name: "Agrigentum", lat: 37.3107, lng: 13.5765, founded: -580, conquered: -262, note: "Conquistata nel 262 a.C." , wiki: "https://it.wikipedia.org/wiki/Agrigento" },
   { name: "Corycus", lat: 36.6678, lng: 34.1678, founded: -500, conquered: -64, note: "Antica città della Cilicia" },
-  { name: "Tarsus", lat: 36.9167, lng: 34.9000, founded: -3000, conquered: -64, note: "Città natale di San Paolo" },
-  { name: "Sardes", lat: 38.4833, lng: 28.0333, founded: -1500, conquered: -133, note: "Capitale della Lidia, ereditata da Attalo III" },
-  { name: "Pergamo", lat: 39.1333, lng: 27.1833, founded: -800, conquered: -133, note: "Regno donato a Roma da Attalo III" },
-  { name: "Smirne", lat: 38.4192, lng: 27.1287, founded: -1000, conquered: -133, note: "Importante città dell'Asia romana" },
-  { name: "Mileto", lat: 37.5300, lng: 27.2780, founded: -1000, conquered: -133, note: "Antica città ionica sotto Roma" },
-  { name: "Alessandretta", lat: 36.5882, lng: 36.1730, founded: -300, conquered: -64, note: "Importante porto della Siria romana" },
-  { name: "Apamea", lat: 35.4167, lng: 36.4000, founded: -300, conquered: -64, note: "Importante centro della Siria romana" },
-  { name: "Cremona", lat: 45.1333, lng: 10.0333, founded: -218, conquered: -218, note: "Colonia romana dal 218 a.C." },
-  { name: "Verona", lat: 45.4386, lng: 10.9936, founded: -500, conquered: -89, note: "Municipium romano dal 89 a.C." },
-  { name: "Bergomum", lat: 45.6948, lng: 9.6676, founded: -500, conquered: -196, note: "Bergamo, municipium romano" },
-  { name: "Pisa", lat: 43.7161, lng: 10.3966, founded: -600, conquered: -180, note: "Importante porto etrusco-romano" },
-  { name: "Florentia", lat: 43.7696, lng: 11.2558, founded: -59, conquered: -59, note: "Fondata da Cesare nel 59 a.C." },
-  { name: "Arretium", lat: 43.4633, lng: 11.8787, founded: -500, conquered: -294, note: "Arezzo, importante città etrusco-romana" },
-  { name: "Mutina", lat: 44.6459, lng: 10.9257, founded: -400, conquered: -183, note: "Modena, colonia romana dal 183 a.C." },
-  { name: "Parma", lat: 44.8015, lng: 10.3280, founded: -400, conquered: -183, note: "Colonia romana dal 183 a.C." },
-  { name: "Dertona", lat: 44.8970, lng: 8.8684, founded: -200, conquered: -148, note: "Tortona, importante snodo stradale" },
-  { name: "Vicetia", lat: 45.5469, lng: 11.5362, founded: -400, conquered: -157, note: "Vicenza, municipium romano" },
-  { name: "Altinum", lat: 45.5428, lng: 12.4023, founded: -400, conquered: -100, note: "Antica città veneta, porto sulla laguna" },
-  { name: "Tridentum", lat: 46.0667, lng: 11.1167, founded: -300, conquered: -89, note: "Trento, municipium romano" },
-  { name: "Fanum Fortunae", lat: 43.8400, lng: 13.0133, founded: -200, conquered: -220, note: "Fano, città lungo la Via Flaminia" },
-  { name: "Narnia", lat: 42.5197, lng: 12.5147, founded: -400, conquered: -299, note: "Narni, importante snodo della Flaminia" },
-  { name: "Asculum", lat: 42.8549, lng: 13.5781, founded: -600, conquered: -268, note: "Ascoli Piceno, municipium romano" },
-  { name: "Corfinium", lat: 42.1167, lng: 13.8333, founded: -400, conquered: -300, note: "Capitale italici durante la Guerra Sociale" },
-  { name: "Aternum", lat: 42.4641, lng: 14.2142, founded: -400, conquered: -300, note: "Pescara, porto adriatico" },
-  { name: "Tibur", lat: 41.9625, lng: 12.8034, founded: -600, conquered: -338, note: "Tivoli, antica città latina" },
-  { name: "Philippi", lat: 41.0142, lng: 24.2846, founded: -356, conquered: -168, note: "Sede della battaglia decisiva nel 42 a.C." },
-  { name: "Petra", lat: 30.3285, lng: 35.4444, founded: -300, conquered: 106, note: "Annessa da Traiano nel 106 d.C." },
-  { name: "Bostra", lat: 32.5167, lng: 36.4833, founded: -200, conquered: 106, note: "Capitale della provincia d'Arabia" },
-  { name: "Tiro", lat: 33.2703, lng: 35.2035, founded: -3000, conquered: -64, note: "Antica città fenicia, importante porto" },
-  { name: "Sidone", lat: 33.5600, lng: 35.3700, founded: -4000, conquered: -64, note: "Antica città fenicia" },
-  { name: "Paestum", lat: 40.4219, lng: 15.0068, founded: -600, conquered: -273, note: "Poseidonia greca, colonia latina dal 273 a.C., patrim. UNESCO" },
-  { name: "Velia", lat: 40.1604, lng: 15.1537, founded: -540, conquered: -273, note: "Elea greca, scuola eleatica (Parmenide, Zenone)" },
-  { name: "Stabiae", lat: 40.6999, lng: 14.4826, founded: -500, conquered: -89, note: "Città sepolta dal Vesuvio nel 79 d.C., ville patrizie" },
-  { name: "Nuceria Alfaterna", lat: 40.7421, lng: 14.6471, founded: -600, conquered: -310, note: "Nocera, importante centro sannitico-romano in Campania" },
-  { name: "Nola", lat: 40.9261, lng: 14.5286, founded: -600, conquered: -313, note: "Antica città campana, colonia romana" },
-  { name: "Abellinum", lat: 40.9161, lng: 14.7913, founded: -400, conquered: -89, note: "Avellino, municipium romano, snodo della Via Appia" },
-  { name: "Aeclanum", lat: 41.0500, lng: 15.0167, founded: -400, conquered: -89, note: "Importante città irpina, municipium romano" },
-  { name: "Teanum Sidicinum", lat: 41.2500, lng: 14.1667, founded: -500, conquered: -340, note: "Teano, capitale dei Sidicini, municipium romano" },
-  { name: "Allifae", lat: 41.3333, lng: 14.3500, founded: -500, conquered: -340, note: "Alife, municipium romano, snodo della Via Latina" },
-  { name: "Minturnae", lat: 41.2581, lng: 13.7749, founded: -500, conquered: -295, note: "Città aurunca, colonia romana, importante porto" },
-  { name: "Sinuessa", lat: 41.1500, lng: 13.8500, founded: -296, conquered: -296, note: "Colonia romana sulla Via Appia, acque termali" },
-  { name: "Cales", lat: 41.2000, lng: 14.1333, founded: -500, conquered: -335, note: "Calvi Risorta, colonia latina dal 335 a.C." },
-  { name: "Suessula", lat: 40.9833, lng: 14.3500, founded: -600, conquered: -340, note: "Antica città campana, municipium romano" },
-  { name: "Cubulteria", lat: 41.0833, lng: 14.2000, founded: -500, conquered: -340, note: "Antico centro sannitico in Campania" },
-  { name: "Compsa", lat: 40.8667, lng: 15.3333, founded: -500, conquered: -89, note: "Conza della Campania, municipium romano" },
+  { name: "Tarsus", lat: 36.9167, lng: 34.9000, founded: -3000, conquered: -64, note: "Città natale di San Paolo" , wiki: "https://it.wikipedia.org/wiki/Tarso" },
+  { name: "Sardes", lat: 38.4833, lng: 28.0333, founded: -1500, conquered: -133, note: "Capitale della Lidia, ereditata da Attalo III" , wiki: "https://it.wikipedia.org/wiki/Sardi_(citt�)" },
+  { name: "Pergamo", lat: 39.1333, lng: 27.1833, founded: -800, conquered: -133, note: "Regno donato a Roma da Attalo III" , wiki: "https://it.wikipedia.org/wiki/Pergamo" },
+  { name: "Smirne", lat: 38.4192, lng: 27.1287, founded: -1000, conquered: -133, note: "Importante città dell'Asia romana" , wiki: "https://it.wikipedia.org/wiki/Smirne" },
+  { name: "Mileto", lat: 37.5300, lng: 27.2780, founded: -1000, conquered: -133, note: "Antica città ionica sotto Roma" , wiki: "https://it.wikipedia.org/wiki/Mileto_(citt�_antica)" },
+  { name: "Alessandretta", lat: 36.5882, lng: 36.1730, founded: -300, conquered: -64, note: "Importante porto della Siria romana" , wiki: "https://it.wikipedia.org/wiki/Iskenderun" },
+  { name: "Apamea", lat: 35.4167, lng: 36.4000, founded: -300, conquered: -64, note: "Importante centro della Siria romana" , wiki: "https://it.wikipedia.org/wiki/Apamea_(Siria)" },
+  { name: "Cremona", lat: 45.1333, lng: 10.0333, founded: -218, conquered: -218, note: "Colonia romana dal 218 a.C." , wiki: "https://it.wikipedia.org/wiki/Cremona" },
+  { name: "Verona", lat: 45.4386, lng: 10.9936, founded: -500, conquered: -89, note: "Municipium romano dal 89 a.C." , wiki: "https://it.wikipedia.org/wiki/Verona" },
+  { name: "Bergomum", lat: 45.6948, lng: 9.6676, founded: -500, conquered: -196, note: "Bergamo, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Bergamo" },
+  { name: "Pisa", lat: 43.7161, lng: 10.3966, founded: -600, conquered: -180, note: "Importante porto etrusco-romano" , wiki: "https://it.wikipedia.org/wiki/Pisa" },
+  { name: "Florentia", lat: 43.7696, lng: 11.2558, founded: -59, conquered: -59, note: "Fondata da Cesare nel 59 a.C." , wiki: "https://it.wikipedia.org/wiki/Firenze" },
+  { name: "Arretium", lat: 43.4633, lng: 11.8787, founded: -500, conquered: -294, note: "Arezzo, importante città etrusco-romana" , wiki: "https://it.wikipedia.org/wiki/Arezzo" },
+  { name: "Mutina", lat: 44.6459, lng: 10.9257, founded: -400, conquered: -183, note: "Modena, colonia romana dal 183 a.C." , wiki: "https://it.wikipedia.org/wiki/Modena" },
+  { name: "Parma", lat: 44.8015, lng: 10.3280, founded: -400, conquered: -183, note: "Colonia romana dal 183 a.C." , wiki: "https://it.wikipedia.org/wiki/Parma" },
+  { name: "Dertona", lat: 44.8970, lng: 8.8684, founded: -200, conquered: -148, note: "Tortona, importante snodo stradale" , wiki: "https://it.wikipedia.org/wiki/Tortona" },
+  { name: "Vicetia", lat: 45.5469, lng: 11.5362, founded: -400, conquered: -157, note: "Vicenza, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Vicenza" },
+  { name: "Altinum", lat: 45.5428, lng: 12.4023, founded: -400, conquered: -100, note: "Antica città veneta, porto sulla laguna" , wiki: "https://it.wikipedia.org/wiki/Altino" },
+  { name: "Tridentum", lat: 46.0667, lng: 11.1167, founded: -300, conquered: -89, note: "Trento, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Trento" },
+  { name: "Fanum Fortunae", lat: 43.8400, lng: 13.0133, founded: -200, conquered: -220, note: "Fano, città lungo la Via Flaminia" , wiki: "https://it.wikipedia.org/wiki/Fano" },
+  { name: "Narnia", lat: 42.5197, lng: 12.5147, founded: -400, conquered: -299, note: "Narni, importante snodo della Flaminia" , wiki: "https://it.wikipedia.org/wiki/Narni" },
+  { name: "Asculum", lat: 42.8549, lng: 13.5781, founded: -600, conquered: -268, note: "Ascoli Piceno, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Ascoli_Piceno" },
+  { name: "Corfinium", lat: 42.1167, lng: 13.8333, founded: -400, conquered: -300, note: "Capitale italici durante la Guerra Sociale" , wiki: "https://it.wikipedia.org/wiki/Corfinio" },
+  { name: "Aternum", lat: 42.4641, lng: 14.2142, founded: -400, conquered: -300, note: "Pescara, porto adriatico" , wiki: "https://it.wikipedia.org/wiki/Pescara" },
+  { name: "Tibur", lat: 41.9625, lng: 12.8034, founded: -600, conquered: -338, note: "Tivoli, antica città latina" , wiki: "https://it.wikipedia.org/wiki/Tivoli" },
+  { name: "Philippi", lat: 41.0142, lng: 24.2846, founded: -356, conquered: -168, note: "Sede della battaglia decisiva nel 42 a.C." , wiki: "https://it.wikipedia.org/wiki/Filippi" },
+  { name: "Petra", lat: 30.3285, lng: 35.4444, founded: -300, conquered: 106, note: "Annessa da Traiano nel 106 d.C." , wiki: "https://it.wikipedia.org/wiki/Petra" },
+  { name: "Bostra", lat: 32.5167, lng: 36.4833, founded: -200, conquered: 106, note: "Capitale della provincia d'Arabia" , wiki: "https://it.wikipedia.org/wiki/Bosra" },
+  { name: "Tiro", lat: 33.2703, lng: 35.2035, founded: -3000, conquered: -64, note: "Antica città fenicia, importante porto" , wiki: "https://it.wikipedia.org/wiki/Tiro_(citt�_antica)" },
+  { name: "Sidone", lat: 33.5600, lng: 35.3700, founded: -4000, conquered: -64, note: "Antica città fenicia" , wiki: "https://it.wikipedia.org/wiki/Sidone" },
+  { name: "Paestum", lat: 40.4219, lng: 15.0068, founded: -600, conquered: -273, note: "Poseidonia greca, colonia latina dal 273 a.C., patrim. UNESCO" , wiki: "https://it.wikipedia.org/wiki/Paestum" },
+  { name: "Velia", lat: 40.1604, lng: 15.1537, founded: -540, conquered: -273, note: "Elea greca, scuola eleatica (Parmenide, Zenone)" , wiki: "https://it.wikipedia.org/wiki/Velia" },
+  { name: "Stabiae", lat: 40.6999, lng: 14.4826, founded: -500, conquered: -89, note: "Città sepolta dal Vesuvio nel 79 d.C., ville patrizie" , wiki: "https://it.wikipedia.org/wiki/Stabia" },
+  { name: "Nuceria Alfaterna", lat: 40.7421, lng: 14.6471, founded: -600, conquered: -310, note: "Nocera, importante centro sannitico-romano in Campania" , wiki: "https://it.wikipedia.org/wiki/Nocera_Inferiore" },
+  { name: "Nola", lat: 40.9261, lng: 14.5286, founded: -600, conquered: -313, note: "Antica città campana, colonia romana" , wiki: "https://it.wikipedia.org/wiki/Nola" },
+  { name: "Abellinum", lat: 40.9161, lng: 14.7913, founded: -400, conquered: -89, note: "Avellino, municipium romano, snodo della Via Appia" , wiki: "https://it.wikipedia.org/wiki/Avellino" },
+  { name: "Aeclanum", lat: 41.0500, lng: 15.0167, founded: -400, conquered: -89, note: "Importante città irpina, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Aeclanum" },
+  { name: "Teanum Sidicinum", lat: 41.2500, lng: 14.1667, founded: -500, conquered: -340, note: "Teano, capitale dei Sidicini, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Teano" },
+  { name: "Allifae", lat: 41.3333, lng: 14.3500, founded: -500, conquered: -340, note: "Alife, municipium romano, snodo della Via Latina" , wiki: "https://it.wikipedia.org/wiki/Alife" },
+  { name: "Minturnae", lat: 41.2581, lng: 13.7749, founded: -500, conquered: -295, note: "Città aurunca, colonia romana, importante porto" , wiki: "https://it.wikipedia.org/wiki/Minturno" },
+  { name: "Sinuessa", lat: 41.1500, lng: 13.8500, founded: -296, conquered: -296, note: "Colonia romana sulla Via Appia, acque termali" , wiki: "https://it.wikipedia.org/wiki/Sinuessa" },
+  { name: "Cales", lat: 41.2000, lng: 14.1333, founded: -500, conquered: -335, note: "Calvi Risorta, colonia latina dal 335 a.C." , wiki: "https://it.wikipedia.org/wiki/Calvi_Risorta" },
+  { name: "Suessula", lat: 40.9833, lng: 14.3500, founded: -600, conquered: -340, note: "Antica città campana, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Suessula" },
+  { name: "Cubulteria", lat: 41.0833, lng: 14.2000, founded: -500, conquered: -340, note: "Antico centro sannitico in Campania" , wiki: "https://it.wikipedia.org/wiki/Cubulteria" },
+  { name: "Compsa", lat: 40.8667, lng: 15.3333, founded: -500, conquered: -89, note: "Conza della Campania, municipium romano" , wiki: "https://it.wikipedia.org/wiki/Conza_della_Campania" },
   { name: "Volceii", lat: 40.5333, lng: 15.5167, founded: -500, conquered: -89, note: "Buccino, municipium romano in Lucania" },
   { name: "Forum Popilii", lat: 40.2833, lng: 15.4500, founded: -200, conquered: -100, note: "Forza d'Agrò, centro romano in Lucania" },
   { name: "Atina", lat: 40.4500, lng: 15.5500, founded: -500, conquered: -89, note: "Atena Lucana, municipium romano" },
   { name: "Grumentum", lat: 40.2833, lng: 15.9000, founded: -600, conquered: -89, note: "Importante centro romano in Lucania, teatro romano" },
   { name: "Blanda", lat: 39.9000, lng: 15.7833, founded: -500, conquered: -89, note: "Blanda Julia, colonia romana sulla costa tirrenica" },
-  { name: "Nicaea", lat: 40.4290, lng: 29.7195, founded: -300, conquered: -74, note: "Sede del Concilio di Nicea (325), capitale dell'Impero di Nicea (1204-1261)" },
-  { name: "Mystras", lat: 37.0731, lng: 22.3683, founded: 1249, conquered: 1249, note: "Capitale del Despotato di Morea, centro culturale bizantino" },
-  { name: "Trebisonda", lat: 41.0027, lng: 39.7168, founded: -750, conquered: -65, note: "Capitale dell'Impero di Trebisonda (1204-1461)" },
-  { name: "Arta", lat: 39.1592, lng: 20.9868, founded: -700, conquered: -168, note: "Capitale del Despotato d'Epiro (1205-1479)" },
-  { name: "Mistra", lat: 37.0731, lng: 22.3683, founded: 1249, conquered: 1249, note: "Centro del Rinascimento paleologo" },
-  { name: "Ani", lat: 40.5069, lng: 43.5728, founded: -500, conquered: -100, note: "Capitale del regno armeno, contesa tra Bizantini e Turchi" },
-  { name: "Edessa", lat: 37.1511, lng: 38.7972, founded: -300, conquered: -64, note: "Thessaloniki, importante centro bizantino e crociato" },
-  { name: "Cafa", lat: 45.0333, lng: 35.3786, founded: -600, conquered: -100, note: "Teodosia, importante colonia genovese in Crimea" },
-  { name: "Cherson", lat: 44.6111, lng: 33.4883, founded: -500, conquered: -100, note: "Tema bizantino in Crimea, luogo del battesimo di Vladimir" },
+  { name: "Nicaea", lat: 40.4290, lng: 29.7195, founded: -300, conquered: -74, note: "Sede del Concilio di Nicea (325), capitale dell'Impero di Nicea (1204-1261)" , wiki: "https://it.wikipedia.org/wiki/Nicea" },
+  { name: "Mystras", lat: 37.0731, lng: 22.3683, founded: 1249, conquered: 1249, note: "Capitale del Despotato di Morea, centro culturale bizantino" , wiki: "https://it.wikipedia.org/wiki/Mistra" },
+  { name: "Trebisonda", lat: 41.0027, lng: 39.7168, founded: -750, conquered: -65, note: "Capitale dell'Impero di Trebisonda (1204-1461)" , wiki: "https://it.wikipedia.org/wiki/Trebisonda" },
+  { name: "Arta", lat: 39.1592, lng: 20.9868, founded: -700, conquered: -168, note: "Capitale del Despotato d'Epiro (1205-1479)" , wiki: "https://it.wikipedia.org/wiki/Arta_(Grecia)" },
+  { name: "Mistra", lat: 37.0731, lng: 22.3683, founded: 1249, conquered: 1249, note: "Centro del Rinascimento paleologo" , wiki: "https://it.wikipedia.org/wiki/Mistra" },
+  { name: "Ani", lat: 40.5069, lng: 43.5728, founded: -500, conquered: -100, note: "Capitale del regno armeno, contesa tra Bizantini e Turchi" , wiki: "https://it.wikipedia.org/wiki/Ani_(citt�)" },
+  { name: "Edessa", lat: 37.1511, lng: 38.7972, founded: -300, conquered: -64, note: "Thessaloniki, importante centro bizantino e crociato" , wiki: "https://it.wikipedia.org/wiki/Edessa_(Mesopotamia)" },
+  { name: "Cafa", lat: 45.0333, lng: 35.3786, founded: -600, conquered: -100, note: "Teodosia, importante colonia genovese in Crimea" , wiki: "https://it.wikipedia.org/wiki/Feodosia" },
+  { name: "Cherson", lat: 44.6111, lng: 33.4883, founded: -500, conquered: -100, note: "Tema bizantino in Crimea, luogo del battesimo di Vladimir" , wiki: "https://it.wikipedia.org/wiki/Chersonesus" },
 ];
 
 const roads = [
@@ -472,80 +486,84 @@ const roads = [
     coords: [[45.6495, 13.7768], [45.7000, 13.9000], [45.7667, 13.9500], [45.8000, 14.0000], [45.8333, 14.0500], [45.8500, 14.1000], [45.8666, 13.8495]] },
   { name: "Via Severiana (proseguimento)", built: 200, end: 476,
     coords: [[41.1115, 14.2190], [41.1000, 14.3000], [41.0833, 14.4000], [41.0667, 14.5000], [41.0500, 14.5833], [41.0333, 14.6500], [41.0000, 14.7167], [40.9833, 14.7500], [40.9500, 14.7833], [40.9000, 14.8000], [40.8518, 14.2681]] },
-  { name: "Aemilia Scauri", built: -109, end: 476,
-    coords: [[44.4070, 8.9340], [44.3500, 8.8500], [44.3000, 8.7667], [44.2500, 8.6833], [44.2000, 8.6167], [44.1500, 8.5500], [44.1000, 8.4833], [44.0500, 8.4167], [44.0000, 8.3500], [43.9500, 8.2833], [43.9000, 8.2167], [43.8500, 8.1833], [43.8000, 8.1500], [43.7500, 8.1167], [43.7000, 8.0833], [43.6500, 8.0500], [43.6000, 8.0167], [43.5500, 8.0000]] },
+  { name: "Via Herculia (Benevento-Potenza)", built: 200, end: 476,
+    coords: [[41.1298, 14.7854], [41.0500, 14.9000], [40.9000, 15.1000], [40.8000, 15.3000], [40.7167, 15.5333], [40.6333, 15.8000], [40.5500, 15.8833], [40.4667, 15.9667], [40.3500, 15.8833], [40.3000, 15.7833], [40.2500, 15.6833], [40.2333, 15.6167]] },
+  { name: "Via Minucia (Brindisi-Taranto)", built: -100, end: 476,
+    coords: [[40.6415, 17.9489], [40.6333, 17.8000], [40.5833, 17.6000], [40.5500, 17.5000], [40.5000, 17.4167], [40.4766, 17.2298]] },
+  { name: "Via Romea (Roma-Siena)", built: -100, end: 1500,
+    coords: [[41.9028, 12.4964], [42.2500, 12.3000], [42.5000, 12.2500], [42.7000, 12.2000], [42.9000, 12.1000], [43.0000, 12.0500], [43.2000, 12.0000], [43.4000, 11.9000], [43.4633, 11.8787], [43.6000, 11.7000], [43.7000, 11.5500], [43.7696, 11.2558], [43.9000, 11.2000], [44.0000, 11.1000], [43.9500, 11.0000], [43.8500, 10.9000], [43.8000, 10.8000], [43.7161, 10.3966], [43.7000, 10.5000], [43.6000, 10.7000], [43.5000, 10.9000], [43.4000, 11.0000], [43.3500, 11.2000], [43.3000, 11.3000], [43.2500, 11.3500], [43.2000, 11.4000], [43.1531, 11.4804]] },
   { name: "Via Francigena (Toscana)", built: 800, end: 1500,
     coords: [[44.471605596, 9.928314705], [44.465364946, 9.916798236], [44.450176245, 9.921714659], [44.435135231, 9.927721557], [44.421977815, 9.941089811], [44.405199962, 9.918230092], [44.388532306, 9.902851652], [44.377955654, 9.882446472], [44.353037914, 9.907960681], [44.340244383, 9.921813113], [44.332552613, 9.928314899], [44.327373864, 9.945643039], [44.318331429, 9.948669067], [44.299942145, 9.962757665], [44.292282381, 9.975938654], [44.272522046, 9.979804783], [44.251863109, 9.970834456], [44.226029052, 9.968081567], [44.192502597, 9.972998662], [44.180980067, 9.971129528], [44.166465804, 9.956628765], [44.141880757, 9.949702928], [44.110777034, 9.98390344], [44.087254268, 10.019432261], [44.049578265, 10.064074537], [44.049697885, 10.101721893], [44.047024573, 10.131448423], [44.012650799, 10.163888217], [43.990955754, 10.199739892], [43.954315085, 10.235210907], [43.935002173, 10.283559559], [43.903837606, 10.354549253], [43.891261598, 10.400981163], [43.853615275, 10.451432487], [43.840210162, 10.55951479], [43.831288781, 10.63617108], [43.781233254, 10.703497727], [43.743187522, 10.76307943], [43.712204546, 10.819187787], [43.674943297, 10.866519761], [43.642313414, 10.899907947], [43.596681966, 10.927918189], [43.563351273, 10.95013948], [43.5133429, 10.995327925], [43.467520864, 11.044931731], [43.487413783, 11.069384625], [43.473147104, 11.103447216], [43.462831477, 11.137569983], [43.401994573, 11.138965089], [43.38580029, 11.211261824], [43.378550359, 11.230508626], [43.350669009, 11.249620218], [43.321886036, 11.254230513], [43.326144569, 11.294888364], [43.310613368, 11.345859247], [43.277936978, 11.376990385], [43.242696774, 11.394802036], [43.203145893, 11.430422628], [43.153129327, 11.480373473], [43.099691083, 11.497532438], [43.080012671, 11.529983036], [43.077593646, 11.570520976], [43.059173513, 11.59887905], [43.028004851, 11.62407166], [43.00018043, 11.626350899], [42.976632024, 11.693760342], [42.918979249, 11.740935507], [42.849759077, 11.792289169], [42.749607364, 11.863235274], [42.685507483, 11.913363231], [42.645141578, 11.986219472], [42.64338983, 11.988817112]] },
 ];
 
 const sites = [
-  { name: "Portus", type: "port", lat: 41.7800, lng: 12.2300, year: 42, note: "Porto artificiale di Claudio e Traiano" },
-  { name: "Misenum", type: "port", lat: 40.7930, lng: 14.0830, year: -27, note: "Principale base della flotta romana occidentale" },
-  { name: "Classis", type: "port", lat: 44.4200, lng: 12.2800, year: -12, note: "Base della flotta romana adriatica (Ravenna)" },
-  { name: "Centumcellae", type: "port", lat: 42.0948, lng: 11.7936, year: 106, note: "Civitavecchia, porto fatto costruire da Traiano" },
-  { name: "Ancona", type: "port", lat: 43.6167, lng: 13.5167, year: -178, note: "Importante porto adriatico con arco di Traiano" },
-  { name: "Forum Iulii", type: "port", lat: 43.4333, lng: 6.7333, year: -49, note: "Fréjus, base navale romana" },
-  { name: "Gesoriacum", type: "port", lat: 50.7250, lng: 1.6133, year: -55, note: "Boulogne, porto per la conquista della Britannia" },
-  { name: "Carales", type: "port", lat: 39.2167, lng: 9.1167, year: -238, note: "Cagliari, principale porto della Sardegna" },
-  { name: "Portus Magnus", type: "port", lat: 36.7500, lng: 3.0500, year: -33, note: "Algeri, porto della Mauretania" },
-  { name: "Seleucia Pieria", type: "port", lat: 36.1167, lng: 35.9167, year: -300, note: "Porto di Antiochia sull'Oronte" },
-  { name: "Caesarea Mauretaniae", type: "port", lat: 36.6072, lng: 2.1892, year: -25, note: "Cherchell, capitale della Mauretania" },
+  { name: "Portus", type: "port", lat: 41.7800, lng: 12.2300, year: 42, note: "Porto artificiale di Claudio e Traiano" , wiki: "https://it.wikipedia.org/wiki/Porto_Traiano" },
+  { name: "Misenum", type: "port", lat: 40.7930, lng: 14.0830, year: -27, note: "Principale base della flotta romana occidentale" , wiki: "https://it.wikipedia.org/wiki/Capo_Miseno" },
+  { name: "Classis", type: "port", lat: 44.4200, lng: 12.2800, year: -12, note: "Base della flotta romana adriatica (Ravenna)" , wiki: "https://it.wikipedia.org/wiki/Classe_(Ravenna)" },
+  { name: "Centumcellae", type: "port", lat: 42.0948, lng: 11.7936, year: 106, note: "Civitavecchia, porto fatto costruire da Traiano" , wiki: "https://it.wikipedia.org/wiki/Civitavecchia" },
+  { name: "Ancona", type: "port", lat: 43.6167, lng: 13.5167, year: -178, note: "Importante porto adriatico con arco di Traiano" , wiki: "https://it.wikipedia.org/wiki/Ancona" },
+  { name: "Forum Iulii", type: "port", lat: 43.4333, lng: 6.7333, year: -49, note: "Fréjus, base navale romana" , wiki: "https://it.wikipedia.org/wiki/Fr�jus" },
+  { name: "Gesoriacum", type: "port", lat: 50.7250, lng: 1.6133, year: -55, note: "Boulogne, porto per la conquista della Britannia" , wiki: "https://it.wikipedia.org/wiki/Boulogne-sur-Mer" },
+  { name: "Carales", type: "port", lat: 39.2167, lng: 9.1167, year: -238, note: "Cagliari, principale porto della Sardegna" , wiki: "https://it.wikipedia.org/wiki/Cagliari" },
+  { name: "Portus Magnus", type: "port", lat: 36.7500, lng: 3.0500, year: -33, note: "Algeri, porto della Mauretania" , wiki: "https://it.wikipedia.org/wiki/Portus_Magnus" },
+  { name: "Seleucia Pieria", type: "port", lat: 36.1167, lng: 35.9167, year: -300, note: "Porto di Antiochia sull'Oronte" , wiki: "https://it.wikipedia.org/wiki/Seleucia_di_Pieria" },
+  { name: "Caesarea Mauretaniae", type: "port", lat: 36.6072, lng: 2.1892, year: -25, note: "Cherchell, capitale della Mauretania" , wiki: "https://it.wikipedia.org/wiki/Cherchell" },
   { name: "Puteoli", type: "port", lat: 40.8251, lng: 14.1250, year: -338, note: "Principale porto commerciale di Roma" },
-  { name: "Carteia", type: "port", lat: 36.1861, lng: -5.4097, year: -171, note: "Prima colonia romana fuori dall'Italia" },
+  { name: "Carteia", type: "port", lat: 36.1861, lng: -5.4097, year: -171, note: "Prima colonia romana fuori dall'Italia" , wiki: "https://it.wikipedia.org/wiki/Carteia" },
   { name: "Ostia", type: "port", lat: 41.7567, lng: 12.3017, year: -620, note: "Antico porto di Roma" },
 
-  { name: "Battaglia di Canne", type: "battle", lat: 41.3000, lng: 16.1000, year: -216, note: "Annibale annienta l'esercito romano (216 a.C.)" },
-  { name: "Battaglia di Zama", type: "battle", lat: 36.1000, lng: 9.2000, year: -202, note: "Scipione sconfigge Annibale (202 a.C.)" },
-  { name: "Battaglia di Pidna", type: "battle", lat: 40.3700, lng: 22.5800, year: -168, note: "Paolo Emilio sconfigge Perseo di Macedonia (168 a.C.)" },
-  { name: "Battaglia di Farsalo", type: "battle", lat: 39.5000, lng: 22.4000, year: -48, note: "Cesare sconfigge Pompeo (48 a.C.)" },
-  { name: "Battaglia di Azio", type: "battle", lat: 38.9000, lng: 20.7000, year: -31, note: "Ottaviano sconfigge Antonio e Cleopatra (31 a.C.)" },
-  { name: "Battaglia di Alesia", type: "battle", lat: 47.5000, lng: 4.5000, year: -52, note: "Cesare sconfigge Vercingetorige (52 a.C.)" },
-  { name: "Battaglia di Carre", type: "battle", lat: 36.9000, lng: 40.0000, year: -53, note: "Crasso sconfitto dai Parti (53 a.C.)" },
-  { name: "Battaglia del Metauro", type: "battle", lat: 43.7000, lng: 13.1000, year: -207, note: "Nerone e Livio sconfiggono Asdrubale (207 a.C.)" },
-  { name: "Battaglia del Lago Trasimeno", type: "battle", lat: 43.1000, lng: 12.1000, year: -217, note: "Annibale tende un'imboscata ai Romani (217 a.C.)" },
-  { name: "Battaglia della Foresta di Teutoburgo", type: "battle", lat: 52.0000, lng: 8.5000, year: 9, note: "Varo perde tre legioni (9 d.C.)" },
-  { name: "Battaglia di Munda", type: "battle", lat: 37.6000, lng: -4.9000, year: -45, note: "Cesare sconfigge i Pompeiani (45 a.C.)" },
-  { name: "Battaglia di Tapso", type: "battle", lat: 35.6000, lng: 11.0000, year: -46, note: "Cesare sconfigge i Pompeiani in Africa (46 a.C.)" },
-  { name: "Battaglia del Ponte Milvio", type: "battle", lat: 41.9333, lng: 12.4667, year: 312, note: "Costantino sconfigge Massenzio (312 d.C.)" },
-  { name: "Battaglia di Adrianopoli", type: "battle", lat: 41.7000, lng: 26.5000, year: 378, note: "Valente sconfitto dai Goti (378 d.C.)" },
-  { name: "Battaglia dei Campi Catalaunici", type: "battle", lat: 49.0000, lng: 4.4000, year: 451, note: "Aezio sconfigge Attila (451 d.C.)" },
+  { name: "Battaglia di Canne", type: "battle", lat: 41.3000, lng: 16.1000, year: -216, note: "Annibale annienta l'esercito romano (216 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Canne" },
+  { name: "Battaglia di Zama", type: "battle", lat: 36.1000, lng: 9.2000, year: -202, note: "Scipione sconfigge Annibale (202 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Zama" },
+  { name: "Battaglia di Pidna", type: "battle", lat: 40.3700, lng: 22.5800, year: -168, note: "Paolo Emilio sconfigge Perseo di Macedonia (168 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Pidna" },
+  { name: "Battaglia di Farsalo", type: "battle", lat: 39.5000, lng: 22.4000, year: -48, note: "Cesare sconfigge Pompeo (48 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Farsalo" },
+  { name: "Battaglia di Azio", type: "battle", lat: 38.9000, lng: 20.7000, year: -31, note: "Ottaviano sconfigge Antonio e Cleopatra (31 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Azio" },
+  { name: "Battaglia di Alesia", type: "battle", lat: 47.5000, lng: 4.5000, year: -52, note: "Cesare sconfigge Vercingetorige (52 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Alesia" },
+  { name: "Battaglia di Carre", type: "battle", lat: 36.9000, lng: 40.0000, year: -53, note: "Crasso sconfitto dai Parti (53 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Carre" },
+  { name: "Battaglia del Metauro", type: "battle", lat: 43.7000, lng: 13.1000, year: -207, note: "Nerone e Livio sconfiggono Asdrubale (207 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_del_Metauro" },
+  { name: "Battaglia del Lago Trasimeno", type: "battle", lat: 43.1000, lng: 12.1000, year: -217, note: "Annibale tende un'imboscata ai Romani (217 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_del_lago_Trasimeno" },
+  { name: "Battaglia della Foresta di Teutoburgo", type: "battle", lat: 52.0000, lng: 8.5000, year: 9, note: "Varo perde tre legioni (9 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_della_foresta_di_Teutoburgo" },
+  { name: "Battaglia di Munda", type: "battle", lat: 37.6000, lng: -4.9000, year: -45, note: "Cesare sconfigge i Pompeiani (45 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Munda" },
+  { name: "Battaglia di Tapso", type: "battle", lat: 35.6000, lng: 11.0000, year: -46, note: "Cesare sconfigge i Pompeiani in Africa (46 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Tapso" },
+  { name: "Battaglia del Ponte Milvio", type: "battle", lat: 41.9333, lng: 12.4667, year: 312, note: "Costantino sconfigge Massenzio (312 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Ponte_Milvio" },
+  { name: "Battaglia di Adrianopoli", type: "battle", lat: 41.7000, lng: 26.5000, year: 378, note: "Valente sconfitto dai Goti (378 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_di_Adrianopoli_(378)" },
+  { name: "Battaglia dei Campi Catalaunici", type: "battle", lat: 49.0000, lng: 4.4000, year: 451, note: "Aezio sconfigge Attila (451 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Battaglia_dei_Campi_Catalaunici" },
 
-  { name: "Colosseo", type: "site", lat: 41.8902, lng: 12.4922, year: 80, note: "Anfiteatro Flavio, inaugurato nell'80 d.C." },
-  { name: "Pantheon", type: "site", lat: 41.8986, lng: 12.4769, year: 126, note: "Ricostruito da Adriano nel 126 d.C." },
-  { name: "Foro Romano", type: "site", lat: 41.8925, lng: 12.4853, year: -500, note: "Cuore politico e commerciale di Roma" },
-  { name: "Circo Massimo", type: "site", lat: 41.8856, lng: 12.4850, year: -600, note: "Antico stadio per corse di carri" },
-  { name: "Terme di Caracalla", type: "site", lat: 41.8792, lng: 12.4931, year: 216, note: "Grandi terme pubbliche (216 d.C.)" },
-  { name: "Villa Adriana", type: "site", lat: 41.9400, lng: 12.7700, year: 118, note: "Residenza imperiale di Adriano a Tivoli" },
-  { name: "Mausoleo di Adriano", type: "site", lat: 41.9031, lng: 12.4665, year: 139, note: "Castel Sant'Angelo, mausoleo imperiale" },
-  { name: "Pont du Gard", type: "site", lat: 43.9472, lng: 4.5350, year: -19, note: "Acquedotto romano, patrimonio UNESCO" },
-  { name: "Palazzo di Diocleziano", type: "site", lat: 43.5081, lng: 16.4400, year: 305, note: "Residenza fortificata di Diocleziano a Spalato" },
-  { name: "Arena di Pola", type: "site", lat: 44.8731, lng: 13.8500, year: 80, note: "Anfiteatro romano tra i meglio conservati" },
-  { name: "Villa Romana del Casale", type: "site", lat: 37.5300, lng: 14.3000, year: 310, note: "Piazza Armerina, famosa per i suoi mosaici" },
-  { name: "Valle dei Templi", type: "site", lat: 37.2900, lng: 13.5900, year: -580, note: "Agrigento, templi greci riutilizzati in epoca romana" },
-  { name: "Teatro Greco di Taormina", type: "site", lat: 37.8522, lng: 15.2925, year: -200, note: "Teatro greco-romano con vista sull'Etna" },
-  { name: "Mura Aureliane", type: "site", lat: 41.8700, lng: 12.5000, year: 275, note: "Cinta muraria di Roma costruita da Aureliano" },
-  { name: "Colonna Traiana", type: "site", lat: 41.8957, lng: 12.4842, year: 113, note: "Colonna celebrativa delle guerre daciche (113 d.C.)" },
-  { name: "Arco di Costantino", type: "site", lat: 41.8897, lng: 12.4907, year: 315, note: "Arco trionfale presso il Colosseo (315 d.C.)" },
-  { name: "Domus Aurea", type: "site", lat: 41.8917, lng: 12.4958, year: 64, note: "La grande residenza di Nerone dopo l'incendio" },
-  { name: "Mura Teodosiane", type: "site", lat: 41.0200, lng: 28.9200, year: 408, note: "Imponenti fortificazioni di Costantinopoli" },
-  { name: "Ippodromo di Costantinopoli", type: "site", lat: 41.0086, lng: 28.9750, year: 330, note: "Circo romano di Costantinopoli" },
+  { name: "Colosseo", type: "site", lat: 41.8902, lng: 12.4922, year: 80, note: "Anfiteatro Flavio, inaugurato nell'80 d.C." , wiki: "https://it.wikipedia.org/wiki/Colosseo" },
+  { name: "Pantheon", type: "site", lat: 41.8986, lng: 12.4769, year: 126, note: "Ricostruito da Adriano nel 126 d.C." , wiki: "https://it.wikipedia.org/wiki/Pantheon_(Roma)" },
+  { name: "Foro Romano", type: "site", lat: 41.8925, lng: 12.4853, year: -500, note: "Cuore politico e commerciale di Roma" , wiki: "https://it.wikipedia.org/wiki/Foro_Romano" },
+  { name: "Circo Massimo", type: "site", lat: 41.8856, lng: 12.4850, year: -600, note: "Antico stadio per corse di carri" , wiki: "https://it.wikipedia.org/wiki/Circo_Massimo" },
+  { name: "Terme di Caracalla", type: "site", lat: 41.8792, lng: 12.4931, year: 216, note: "Grandi terme pubbliche (216 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Terme_di_Caracalla" },
+  { name: "Villa Adriana", type: "site", lat: 41.9400, lng: 12.7700, year: 118, note: "Residenza imperiale di Adriano a Tivoli" , wiki: "https://it.wikipedia.org/wiki/Villa_Adriana_(Tivoli)" },
+  { name: "Mausoleo di Adriano", type: "site", lat: 41.9031, lng: 12.4665, year: 139, note: "Castel Sant'Angelo, mausoleo imperiale" , wiki: "https://it.wikipedia.org/wiki/Castel_Sant'Angelo" },
+  { name: "Pont du Gard", type: "site", lat: 43.9472, lng: 4.5350, year: -19, note: "Acquedotto romano, patrimonio UNESCO" , wiki: "https://it.wikipedia.org/wiki/Pont_du_Gard" },
+  { name: "Palazzo di Diocleziano", type: "site", lat: 43.5081, lng: 16.4400, year: 305, note: "Residenza fortificata di Diocleziano a Spalato" , wiki: "https://it.wikipedia.org/wiki/Palazzo_di_Diocleziano" },
+  { name: "Arena di Pola", type: "site", lat: 44.8731, lng: 13.8500, year: 80, note: "Anfiteatro romano tra i meglio conservati" , wiki: "https://it.wikipedia.org/wiki/Arena_di_Pola" },
+  { name: "Villa Romana del Casale", type: "site", lat: 37.5300, lng: 14.3000, year: 310, note: "Piazza Armerina, famosa per i suoi mosaici" , wiki: "https://it.wikipedia.org/wiki/Villa_romana_del_Casale" },
+  { name: "Valle dei Templi", type: "site", lat: 37.2900, lng: 13.5900, year: -580, note: "Agrigento, templi greci riutilizzati in epoca romana" , wiki: "https://it.wikipedia.org/wiki/Valle_dei_Templi" },
+  { name: "Teatro Greco di Taormina", type: "site", lat: 37.8522, lng: 15.2925, year: -200, note: "Teatro greco-romano con vista sull'Etna" , wiki: "https://it.wikipedia.org/wiki/Teatro_greco_di_Taormina" },
+  { name: "Mura Aureliane", type: "site", lat: 41.8700, lng: 12.5000, year: 275, note: "Cinta muraria di Roma costruita da Aureliano" , wiki: "https://it.wikipedia.org/wiki/Mura_aureliane" },
+  { name: "Colonna Traiana", type: "site", lat: 41.8957, lng: 12.4842, year: 113, note: "Colonna celebrativa delle guerre daciche (113 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Colonna_Traiana" },
+  { name: "Arco di Costantino", type: "site", lat: 41.8897, lng: 12.4907, year: 315, note: "Arco trionfale presso il Colosseo (315 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Arco_di_Costantino" },
+  { name: "Domus Aurea", type: "site", lat: 41.8917, lng: 12.4958, year: 64, note: "La grande residenza di Nerone dopo l'incendio" , wiki: "https://it.wikipedia.org/wiki/Domus_Aurea" },
+  { name: "Mura Teodosiane", type: "site", lat: 41.0200, lng: 28.9200, year: 408, note: "Imponenti fortificazioni di Costantinopoli" , wiki: "https://it.wikipedia.org/wiki/Mura_di_Costantinopoli" },
+  { name: "Ippodromo di Costantinopoli", type: "site", lat: 41.0086, lng: 28.9750, year: 330, note: "Circo romano di Costantinopoli" , wiki: "https://it.wikipedia.org/wiki/Ippodromo_di_Costantinopoli" },
   { name: "Maison Carrée", type: "site", lat: 43.8381, lng: 4.3558, year: -16, note: "Tempio romano meglio conservato al mondo (Nîmes)" },
-  { name: "Arco di Settimio Severo", type: "site", lat: 41.8925, lng: 12.4844, year: 203, note: "Arco trionfale nel Foro Romano (203 d.C.)" },
-  { name: "Anfiteatro Campano", type: "site", lat: 41.0867, lng: 14.2525, year: -50, note: "Anfiteatro di Capua, secondo solo al Colosseo" },
-  { name: "Ponte di Traiano sul Danubio", type: "site", lat: 44.6200, lng: 22.6600, year: 105, note: "Il ponte più lungo dell'antichità, opera di Apollodoro" },
-  { name: "Terme di Diocleziano", type: "site", lat: 41.9027, lng: 12.4983, year: 306, note: "Le più grandi terme pubbliche di Roma" },
-  { name: "Mausoleo di Augusto", type: "site", lat: 41.9062, lng: 12.4761, year: -28, note: "Tomba monumentale di Augusto a Roma" },
-  { name: "Ara Pacis", type: "site", lat: 41.9073, lng: 12.4757, year: -9, note: "Altare della pace di Augusto (9 a.C.)" },
-  { name: "Mura Serviane", type: "site", lat: 41.8930, lng: 12.4950, year: -378, note: "Le prime mura di Roma, attribuite a Servio Tullio" },
-  { name: "Acquedotto Claudio", type: "site", lat: 41.8450, lng: 12.5500, year: 52, note: "Acquedotto tra i più imponenti di Roma" },
-  { name: "Porta Nigra", type: "site", lat: 49.7593, lng: 6.6443, year: 170, note: "Porta cittadina romana a Treviri, patrimonio UNESCO" },
-  { name: "Templi di Paestum", type: "site", lat: 40.4192, lng: 15.0054, year: -550, note: "Templi greci di Hera, Poseidone e Cerere — Patrimonio UNESCO" },
-  { name: "Teatro Romano di Benevento", type: "site", lat: 41.1300, lng: 14.7800, year: 120, note: "Teatro romano del II sec. d.C., tra i più grandi d'Italia" },
-  { name: "Arco di Traiano a Benevento", type: "site", lat: 41.1317, lng: 14.7806, year: 114, note: "Arco trionfale sulla Via Traiana, eccezionali rilievi storici" },
-  { name: "Antiquarium di Paestum", type: "site", lat: 40.4183, lng: 15.0083, year: -273, note: "Museo archeologico con reperti della città greco-romana" },
-  { name: "Scavi di Velia", type: "site", lat: 40.1625, lng: 15.1550, year: -273, note: "Area archeologica di Elea-Velia, città della scuola eleatica" },
-  { name: "Anfiteatro di Santa Maria Capua Vetere", type: "site", lat: 41.0867, lng: 14.2525, year: -50, note: "Secondo anfiteatro romano più grande, sede della scuola gladiatoria" },
-  { name: "Teatro Greco di Velia", type: "site", lat: 40.1600, lng: 15.1550, year: -300, note: "Teatro ellenistico-romano dell'antica Elea" },
+  { name: "Arco di Settimio Severo", type: "site", lat: 41.8925, lng: 12.4844, year: 203, note: "Arco trionfale nel Foro Romano (203 d.C.)" , wiki: "https://it.wikipedia.org/wiki/Arco_di_Settimio_Severo" },
+  { name: "Anfiteatro Campano", type: "site", lat: 41.0867, lng: 14.2525, year: -50, note: "Anfiteatro di Capua, secondo solo al Colosseo" , wiki: "https://it.wikipedia.org/wiki/Anfiteatro_campano" },
+  { name: "Ponte di Traiano sul Danubio", type: "site", lat: 44.6200, lng: 22.6600, year: 105, note: "Il ponte più lungo dell'antichità, opera di Apollodoro" , wiki: "https://it.wikipedia.org/wiki/Ponte_di_Traiano" },
+  { name: "Terme di Diocleziano", type: "site", lat: 41.9027, lng: 12.4983, year: 306, note: "Le più grandi terme pubbliche di Roma" , wiki: "https://it.wikipedia.org/wiki/Terme_di_Diocleziano" },
+  { name: "Mausoleo di Augusto", type: "site", lat: 41.9062, lng: 12.4761, year: -28, note: "Tomba monumentale di Augusto a Roma" , wiki: "https://it.wikipedia.org/wiki/Mausoleo_di_Augusto" },
+  { name: "Ara Pacis", type: "site", lat: 41.9073, lng: 12.4757, year: -9, note: "Altare della pace di Augusto (9 a.C.)" , wiki: "https://it.wikipedia.org/wiki/Ara_Pacis" },
+  { name: "Mura Serviane", type: "site", lat: 41.8930, lng: 12.4950, year: -378, note: "Le prime mura di Roma, attribuite a Servio Tullio" , wiki: "https://it.wikipedia.org/wiki/Mura_serviane" },
+  { name: "Acquedotto Claudio", type: "site", lat: 41.8450, lng: 12.5500, year: 52, note: "Acquedotto tra i più imponenti di Roma" , wiki: "https://it.wikipedia.org/wiki/Acquedotto_Claudio" },
+  { name: "Porta Nigra", type: "site", lat: 49.7593, lng: 6.6443, year: 170, note: "Porta cittadina romana a Treviri, patrimonio UNESCO" , wiki: "https://it.wikipedia.org/wiki/Porta_Nigra" },
+  { name: "Templi di Paestum", type: "site", lat: 40.4192, lng: 15.0054, year: -550, note: "Templi greci di Hera, Poseidone e Cerere — Patrimonio UNESCO" , wiki: "https://it.wikipedia.org/wiki/Paestum" },
+  { name: "Teatro Romano di Benevento", type: "site", lat: 41.1300, lng: 14.7800, year: 120, note: "Teatro romano del II sec. d.C., tra i più grandi d'Italia" , wiki: "https://it.wikipedia.org/wiki/Teatro_romano_di_Benevento" },
+  { name: "Arco di Traiano a Benevento", type: "site", lat: 41.1317, lng: 14.7806, year: 114, note: "Arco trionfale sulla Via Traiana, eccezionali rilievi storici" , wiki: "https://it.wikipedia.org/wiki/Arco_di_Traiano_di_Benevento" },
+  { name: "Antiquarium di Paestum", type: "site", lat: 40.4183, lng: 15.0083, year: -273, note: "Museo archeologico con reperti della città greco-romana" , wiki: "https://it.wikipedia.org/wiki/Paestum" },
+  { name: "Scavi di Velia", type: "site", lat: 40.1625, lng: 15.1550, year: -273, note: "Area archeologica di Elea-Velia, città della scuola eleatica" , wiki: "https://it.wikipedia.org/wiki/Velia" },
+  { name: "Anfiteatro di Santa Maria Capua Vetere", type: "site", lat: 41.0867, lng: 14.2525, year: -50, note: "Secondo anfiteatro romano più grande, sede della scuola gladiatoria" , wiki: "https://it.wikipedia.org/wiki/Anfiteatro_campano" },
+  { name: "Teatro Greco di Velia", type: "site", lat: 40.1600, lng: 15.1550, year: -300, note: "Teatro ellenistico-romano dell'antica Elea" , wiki: "https://it.wikipedia.org/wiki/Velia" },
 ];
 
 const siteLatinNames = {
@@ -1014,7 +1032,7 @@ const map = L.map('map', {
   maxBounds: [[-10, -20], [60, 50]]
 });
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
   maxZoom: 19
 }).addTo(map);
@@ -1023,6 +1041,7 @@ const markers = [];
 const markerGroup = L.layerGroup().addTo(map);
 const roadGroup = L.layerGroup().addTo(map);
 const siteGroup = L.layerGroup().addTo(map);
+const cityLabelGroup = L.layerGroup().addTo(map);
 let showRoads = true;
 let showSites = true;
 
@@ -1050,6 +1069,7 @@ function formatYear(year) {
 
 function updateMap(year) {
   markerGroup.clearLayers();
+  cityLabelGroup.clearLayers();
   let count = 0;
 
   cities.forEach(city => {
@@ -1113,7 +1133,21 @@ function updateMap(year) {
       if (city.note) {
         popupContent += `<div style="margin-top:4px;font-size:0.8rem;color:#999;">${city.note}</div>`;
       }
+      if (city.wiki) {
+        popupContent += `<div style="margin-top:5px;"><a href="${city.wiki}" target="_blank" rel="noopener" style="display:inline-block;color:#4ecca3;text-decoration:none;font-size:0.7rem;border:1px solid rgba(78,204,163,0.2);padding:2px 8px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(78,204,163,0.1)'" onmouseout="this.style.background='transparent'"> Wikipedia ↗</a></div>`;
+      }
       marker.bindPopup(popupContent);
+
+      if (cityPop > 50000) {
+        const latin = latinNames[city.name] || city.name;
+        const labelIcon = L.divIcon({
+          className: 'city-label',
+          html: `<div style="font-family:'Cinzel',serif;font-size:0.55rem;color:#c9a959;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 4px #000,0 0 8px #000,0 0 12px #000;background:rgba(0,0,0,0.25);padding:1px 5px;border-radius:2px;border:1px solid rgba(201,169,89,0.08);white-space:nowrap;pointer-events:none;">${latin}</div>`,
+          iconSize: [0, 0],
+          iconAnchor: [0, 0]
+        });
+        L.marker([city.lat - 0.25, city.lng], { icon: labelIcon, interactive: false, keyboard: false }).addTo(cityLabelGroup);
+      }
     }
   });
 
@@ -1142,11 +1176,13 @@ function updateMap(year) {
         const latinHtml = latinSite ? `<div style="font-size:0.75rem;color:#c9a959;font-style:italic;margin-bottom:4px;">${latinSite}</div>` : '';
         const sPop = pop[site.name];
         const popHtml = sPop ? `<div class="year-info" style="margin-top:2px;"><span style="color:#a855f7;">Popolazione:</span> ${(sPop/1000).toFixed(0)}&thinsp;000 abitanti</div>` : '';
+        const siteType = site.type === 'port' ? '🟦 Porto' : site.type === 'battle' ? '🟥 Battaglia' : '🟣 Sito storico';
+        const siteWiki = site.wiki ? `<div style="margin-top:5px;"><a href="${site.wiki}" target="_blank" rel="noopener" style="display:inline-block;color:#4ecca3;text-decoration:none;font-size:0.7rem;border:1px solid rgba(78,204,163,0.2);padding:2px 8px;border-radius:4px;transition:0.2s;" onmouseover="this.style.background='rgba(78,204,163,0.1)'" onmouseout="this.style.background='transparent'"> Wikipedia ↗</a></div>` : '';
         L.marker([site.lat, site.lng], { icon }).addTo(siteGroup)
           .bindPopup(`<h3>${prefix} ${site.name}</h3>${latinHtml}
             <div class="year-info"><span class="founded">Anno:</span> ${formatYear(site.year)}</div>${popHtml}
             <div style="margin-top:4px;font-size:0.8rem;color:#999;">${site.note}</div>
-            <div style="margin-top:4px;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:${color};">${site.type === 'port' ? '🟦 Porto' : site.type === 'battle' ? '🟥 Battaglia' : '🟣 Sito storico'}</div>`);
+            <div style="margin-top:4px;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:${color};">${siteType}</div>${siteWiki}`);
       }
     });
   }
