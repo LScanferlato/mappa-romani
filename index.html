@@ -25,6 +25,7 @@ body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ba
 .era-badge.regnum { color: #e94560; border-color: #e94560; }
 .era-badge.respublica { color: #c9a959; border-color: #c9a959; }
 .era-badge.imperium { color: #4ecca3; border-color: #4ecca3; }
+.era-badge.byzantium { color: #a855f7; border-color: #a855f7; }
 #map { flex: 1; box-shadow: inset 0 0 60px rgba(0,0,0,0.3); }
 #controls { background: linear-gradient(180deg, rgba(13,17,23,0.95) 0%, rgba(22,27,37,0.98) 100%); padding: 10px 24px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #c9a959; z-index: 1000; flex-wrap: wrap; backdrop-filter: blur(8px); }
 #controls label { font-size: 0.78rem; color: #c9a959; white-space: nowrap; }
@@ -87,7 +88,7 @@ label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer;
       <div class="spqr">SPQR</div>
       <div class="title-group">
         <h1><span>IMPERO</span> ROMANO</h1>
-        <div class="subtitle">Evoluzione territoriale · 753 a.C. – 476 d.C.</div>
+        <div class="subtitle">Evoluzione territoriale · 753 a.C. – 1453 d.C.</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:16px;">
@@ -100,17 +101,18 @@ label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer;
   <div id="controls">
     <label style="font-size:0.65rem;color:#484f58;">753 a.C.</label>
     <div class="slider-wrapper">
-      <input type="range" id="year-slider" min="-753" max="476" value="117" step="1">
+      <input type="range" id="year-slider" min="-753" max="1453" value="117" step="1">
       <div class="slider-labels">
         <span>Regno</span>
         <span>Repubblica</span>
         <span>Impero</span>
+        <span>Bizantino</span>
       </div>
     </div>
-    <label style="font-size:0.65rem;color:#484f58;">476 d.C.</label>
+    <label style="font-size:0.65rem;color:#484f58;">1453 d.C.</label>
     <div id="year-display" class="ad">117 d.C.</div>
     <button id="play-btn" title="Avvia la timeline animata">▶</button>
-    <div id="city-count"><span id="city-count-value">65</span> città</div>
+    <div id="city-count"><span id="city-count-value">85</span> città</div>
     <div id="event-display"></div>
     <div class="checkbox-group">
       <label class="checkbox-item">
@@ -119,8 +121,14 @@ label input { accent-color: #c9a959; width: 14px; height: 14px; cursor: pointer;
       <label class="checkbox-item">
         <input type="checkbox" id="sites-checkbox" checked> Siti
       </label>
+      <label class="checkbox-item" id="itinere-label" style="cursor:pointer;">
+        <input type="checkbox" id="itinere-checkbox" checked> Itiner-e
+      </label>
     </div>
-    <button id="bib-btn" title="Risorse didattiche UNISA" style="background:none;border:1px solid #c9a959;color:#c9a959;font-size:0.7rem;padding:3px 10px;border-radius:4px;cursor:pointer;transition:0.2s;font-family:'Cinzel',serif;letter-spacing:1px;white-space:nowrap;">📚 Risorse</button>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button id="bib-btn" title="Risorse didattiche" style="background:none;border:1px solid #c9a959;color:#c9a959;font-size:0.7rem;padding:3px 10px;border-radius:4px;cursor:pointer;transition:0.2s;font-family:'Cinzel',serif;letter-spacing:1px;white-space:nowrap;">📚 Risorse</button>
+      <button id="speed-btn" title="Velocità timeline" style="background:none;border:1px solid #484f58;color:#8b949e;font-size:0.65rem;padding:2px 8px;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;letter-spacing:1px;">1×</button>
+    </div>
   </div>
   <div id="bib-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;background:#161b22;border:1px solid #c9a959;border-radius:10px;padding:20px;max-width:480px;width:90%;max-height:70vh;overflow-y:auto;box-shadow:0 16px 64px rgba(0,0,0,0.7);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -289,6 +297,15 @@ const cities = [
   { name: "Atina", lat: 40.4500, lng: 15.5500, founded: -500, conquered: -89, note: "Atena Lucana, municipium romano" },
   { name: "Grumentum", lat: 40.2833, lng: 15.9000, founded: -600, conquered: -89, note: "Importante centro romano in Lucania, teatro romano" },
   { name: "Blanda", lat: 39.9000, lng: 15.7833, founded: -500, conquered: -89, note: "Blanda Julia, colonia romana sulla costa tirrenica" },
+  { name: "Nicaea", lat: 40.4290, lng: 29.7195, founded: -300, conquered: -74, note: "Sede del Concilio di Nicea (325), capitale dell'Impero di Nicea (1204-1261)" },
+  { name: "Mystras", lat: 37.0731, lng: 22.3683, founded: 1249, conquered: 1249, note: "Capitale del Despotato di Morea, centro culturale bizantino" },
+  { name: "Trebisonda", lat: 41.0027, lng: 39.7168, founded: -750, conquered: -65, note: "Capitale dell'Impero di Trebisonda (1204-1461)" },
+  { name: "Arta", lat: 39.1592, lng: 20.9868, founded: -700, conquered: -168, note: "Capitale del Despotato d'Epiro (1205-1479)" },
+  { name: "Mistra", lat: 37.0731, lng: 22.3683, founded: 1249, conquered: 1249, note: "Centro del Rinascimento paleologo" },
+  { name: "Ani", lat: 40.5069, lng: 43.5728, founded: -500, conquered: -100, note: "Capitale del regno armeno, contesa tra Bizantini e Turchi" },
+  { name: "Edessa", lat: 37.1511, lng: 38.7972, founded: -300, conquered: -64, note: "Thessaloniki, importante centro bizantino e crociato" },
+  { name: "Cafa", lat: 45.0333, lng: 35.3786, founded: -600, conquered: -100, note: "Teodosia, importante colonia genovese in Crimea" },
+  { name: "Cherson", lat: 44.6111, lng: 33.4883, founded: -500, conquered: -100, note: "Tema bizantino in Crimea, luogo del battesimo di Vladimir" },
 ];
 
 const roads = [
@@ -310,7 +327,7 @@ const roads = [
     coords: [[43.2965, 5.3698], [43.4500, 5.0500], [43.6767, 4.6275], [43.8367, 4.3600], [43.7333, 4.1500], [43.6333, 3.9000], [43.3500, 3.2167], [43.1833, 3.0000], [42.6833, 2.9500], [42.4400, 2.0000]] },
   { name: "Via Augusta", built: -8, end: 476,
     coords: [[42.4400, 1.5000], [41.8000, 1.6000], [41.5000, 1.4000], [41.1189, 1.2445], [41.2500, 1.7000], [41.3874, 2.1686], [41.5000, 1.0000], [41.5667, 0.1000], [41.6333, -0.4000], [41.6488, -0.8891], [40.6000, -0.6000], [40.0000, -0.5000], [39.4699, -0.3763], [38.5000, -0.6000], [38.0000, -0.8000], [37.6051, -0.9853], [37.7000, -2.5000], [37.8000, -3.5000], [37.8500, -4.2000], [37.8882, -4.7794], [37.6500, -5.3000], [37.5000, -5.6000], [37.3891, -5.9845], [37.0000, -6.1000], [36.7500, -6.2000], [36.5271, -6.2886]] },
-  { name: "Via Egnatia", built: -146, end: 476,
+  { name: "Via Egnatia", built: -146, end: 476, byzantine_end: 1204,
     coords: [[41.3215, 19.4505], [40.7200, 19.4700], [41.0461, 19.7508], [41.1127, 20.7971], [40.8000, 22.0500], [40.6403, 22.9444], [40.8167, 23.8333], [41.0167, 24.2833], [41.1167, 25.4000], [40.9167, 26.3833], [40.9700, 27.9500], [41.0082, 28.9784]] },
   { name: "Via Claudia Augusta", built: 47, end: 476,
     coords: [[45.5428, 12.4023], [45.8000, 11.9000], [46.0667, 11.1167], [46.7000, 11.1000], [47.3000, 11.0000], [47.8000, 10.9500], [48.3705, 10.8978]] },
@@ -348,8 +365,44 @@ const roads = [
     coords: [[50.7225, -3.5261], [50.9000, -3.4833], [51.0064, -2.6808], [51.3811, -2.3590], [51.7167, -1.9667], [51.9833, -1.7000], [52.4588, -1.2525], [52.6362, -1.1398], [53.2268, -0.5405]] },
   { name: "Via Annia", built: -131, end: 476,
     coords: [[45.0500, 12.0500], [45.2000, 12.2833], [45.5333, 12.4000], [45.7500, 12.8333], [45.7747, 13.3687]] },
-  { name: "Via Diagonalis", built: 100, end: 476,
+  { name: "Via Diagonalis", built: 100, end: 476, byzantine_end: 1204,
     coords: [[43.3209, 21.8954], [43.1500, 22.5833], [42.6977, 23.3219], [42.1500, 24.7500], [41.9333, 25.9167], [41.6732, 26.5707], [40.9700, 27.9500], [41.0082, 28.9784]] },
+  { name: "Via Latina", built: -400, end: 476,
+    coords: [[41.9028, 12.4964], [41.8333, 12.6000], [41.7833, 12.7667], [41.7333, 12.9500], [41.6833, 13.0833], [41.6500, 13.2000], [41.6000, 13.3000], [41.5500, 13.4167], [41.5000, 13.5000], [41.4500, 13.6167], [41.4000, 13.7000], [41.3500, 13.7833], [41.3000, 13.8833], [41.2500, 13.9667], [41.2000, 14.0500], [41.1500, 14.1333], [41.1115, 14.2190]] },
+  { name: "Via Clodia", built: -250, end: 476,
+    coords: [[41.9028, 12.4964], [41.9667, 12.4333], [42.0500, 12.3500], [42.1333, 12.2667], [42.2333, 12.1833], [42.3833, 12.0833], [42.4500, 12.0500], [42.5500, 12.0000], [42.7000, 11.9167], [42.7833, 11.8667], [42.8833, 11.7833], [42.9500, 11.7333]] },
+  { name: "Via Tiburtina", built: -338, end: 476,
+    coords: [[41.9028, 12.4964], [41.9333, 12.6500], [41.9625, 12.8034]] },
+  { name: "Via Prenestina", built: -300, end: 476,
+    coords: [[41.9028, 12.4964], [41.8833, 12.6333], [41.8667, 12.7667], [41.8500, 12.8833], [41.8333, 12.9500], [41.8167, 13.0000]] },
+  { name: "Via Nomentana", built: -300, end: 476,
+    coords: [[41.9028, 12.4964], [41.9667, 12.5500], [42.0167, 12.6000], [42.0500, 12.6333]] },
+  { name: "Via Ardeatina", built: -300, end: 476,
+    coords: [[41.9028, 12.4964], [41.8000, 12.5333], [41.7000, 12.5667], [41.6167, 12.5833]] },
+  { name: "Via Campana", built: -500, end: 476,
+    coords: [[41.9028, 12.4964], [41.8500, 12.4333], [41.8000, 12.3667], [41.7567, 12.3017]] },
+  { name: "Via Labicana", built: -300, end: 476,
+    coords: [[41.9028, 12.4964], [41.8833, 12.5667], [41.8667, 12.6500], [41.8500, 12.7000], [41.8333, 12.7667], [41.8333, 12.8167]] },
+  { name: "Via Domiziana", built: 95, end: 476,
+    coords: [[41.1500, 13.8500], [41.1000, 13.9167], [41.0500, 13.9833], [40.9833, 14.0500], [40.9333, 14.1000], [40.8833, 14.1333], [40.8251, 14.1250]] },
+  { name: "Via Flacca", built: -184, end: 476,
+    coords: [[41.3000, 13.2500], [41.2667, 13.3833], [41.2333, 13.4667], [41.2000, 13.5833], [41.1833, 13.6667], [41.1667, 13.7167], [41.1500, 13.8000], [41.1115, 14.2190]] },
+  { name: "Via delle Gallie", built: -25, end: 476,
+    coords: [[45.7375, 7.3154], [45.7833, 7.1667], [45.8333, 7.0500], [45.8667, 7.0167], [45.8833, 6.9667], [45.9000, 6.9000], [45.9500, 6.8333], [46.0167, 6.7500], [46.0833, 6.7000], [46.1000, 6.6667], [46.1167, 6.6000], [46.1333, 6.5333], [46.1000, 6.4167], [46.0833, 6.3500], [46.1000, 6.2000], [46.1167, 6.0833], [46.1000, 6.0167], [46.0667, 5.9333], [46.0333, 5.8667], [46.0000, 5.8333], [45.9500, 5.8000], [45.9000, 5.7667], [45.8500, 5.7333], [45.8500, 5.7000], [45.8667, 5.6500], [45.8833, 5.5833], [45.9000, 5.5333], [45.9333, 5.4667], [45.9500, 5.4000], [45.9667, 5.3333], [45.9833, 5.2667], [46.0167, 5.2000], [46.0500, 5.1333], [46.0667, 5.0667], [46.0833, 5.0333], [46.1000, 5.0000]] },
+  { name: "Watling Street", built: 43, end: 410,
+    coords: [[51.3583, 1.3975], [51.2833, 1.0667], [51.2833, 0.8667], [51.3000, 0.6500], [51.3167, 0.5333], [51.3500, 0.4167], [51.3833, 0.3000], [51.4000, 0.1833], [51.4500, 0.0667], [51.4833, 0.0000], [51.5000, -0.1000], [51.5074, -0.1278], [51.5333, -0.1833], [51.5667, -0.3000], [51.5833, -0.4000], [51.6167, -0.5000], [51.6500, -0.6000], [51.6667, -0.7000], [51.7000, -0.8000], [51.7167, -0.9000], [51.7333, -1.0000], [51.7500, -1.1000], [51.7500, -1.2000], [51.7536, -0.3394], [51.8667, -1.5000], [51.9833, -1.7000], [52.1000, -1.9000], [52.2000, -2.0000], [52.3000, -2.1000], [52.4000, -2.2000], [52.4588, -1.2525], [52.6000, -2.4000], [52.6362, -1.1398], [52.7000, -2.5000], [52.8000, -2.6000], [52.9000, -2.6667], [53.0000, -2.7000], [53.1000, -2.7000], [53.2000, -2.7000], [53.3000, -2.7000], [53.4000, -2.7000], [53.5000, -2.7000], [53.6000, -2.7000], [53.7000, -2.7000], [53.8000, -2.7000], [53.9000, -2.7000], [54.0000, -2.7000], [54.1000, -2.7000], [54.2000, -2.7000], [54.3000, -2.7000], [54.4000, -2.7000], [54.5000, -2.7000], [54.6000, -2.7000], [54.7000, -2.7000], [54.8000, -2.7000]] },
+  { name: "Via Gellia", built: -100, end: 476,
+    coords: [[41.2320, 16.0438], [41.0833, 16.2167], [41.0000, 16.4167], [41.0000, 16.5667], [41.0167, 16.7000], [41.0500, 16.8000], [41.0833, 16.8667], [41.1167, 16.9000]] },
+  { name: "Via Valeria Pompeia", built: -200, end: 476,
+    coords: [[38.1938, 15.5540], [38.0333, 15.6500], [37.9833, 15.7000], [37.9500, 15.7500], [37.9000, 15.7833], [37.8500, 15.8000], [37.8000, 15.7833], [37.7500, 15.7667], [37.7000, 15.7333], [37.6500, 15.7000], [37.6000, 15.6667], [37.5500, 15.6500], [37.5000, 15.6167], [37.4500, 15.5833], [37.4000, 15.5500], [37.3500, 15.5333], [37.3000, 15.5000], [37.2500, 15.4833], [37.2000, 15.4667], [37.1500, 15.4500], [37.1000, 15.4333], [37.0500, 15.4167], [37.0000, 15.3833], [36.9500, 15.3500], [36.9000, 15.3000], [36.8500, 15.2667], [36.8000, 15.2167], [36.7500, 15.1833], [36.7000, 15.1500], [36.6500, 15.1333], [36.6000, 15.1000], [36.5500, 15.1000], [36.5000, 15.0833], [36.4500, 15.0833], [36.4000, 15.0667], [36.3500, 15.0667], [36.3000, 15.0500], [36.2500, 15.0333], [36.2000, 15.0167], [36.1500, 15.0000], [36.1000, 14.9833], [36.0500, 14.9667], [36.0000, 14.9500]] },
+  { name: "Via Flavia", built: 78, end: 476,
+    coords: [[45.6495, 13.7768], [45.7000, 13.9000], [45.7667, 13.9500], [45.8000, 14.0000], [45.8333, 14.0500], [45.8500, 14.1000], [45.8666, 13.8495]] },
+  { name: "Via Severiana (proseguimento)", built: 200, end: 476,
+    coords: [[41.1115, 14.2190], [41.1000, 14.3000], [41.0833, 14.4000], [41.0667, 14.5000], [41.0500, 14.5833], [41.0333, 14.6500], [41.0000, 14.7167], [40.9833, 14.7500], [40.9500, 14.7833], [40.9000, 14.8000], [40.8518, 14.2681]] },
+  { name: "Aemilia Scauri", built: -109, end: 476,
+    coords: [[44.4070, 8.9340], [44.3500, 8.8500], [44.3000, 8.7667], [44.2500, 8.6833], [44.2000, 8.6167], [44.1500, 8.5500], [44.1000, 8.4833], [44.0500, 8.4167], [44.0000, 8.3500], [43.9500, 8.2833], [43.9000, 8.2167], [43.8500, 8.1833], [43.8000, 8.1500], [43.7500, 8.1167], [43.7000, 8.0833], [43.6500, 8.0500], [43.6000, 8.0167], [43.5500, 8.0000]] },
+  { name: "Via Francigena (Toscana)", built: 800, end: 1500,
+    coords: [[44.471605596, 9.928314705], [44.465364946, 9.916798236], [44.450176245, 9.921714659], [44.435135231, 9.927721557], [44.421977815, 9.941089811], [44.405199962, 9.918230092], [44.388532306, 9.902851652], [44.377955654, 9.882446472], [44.353037914, 9.907960681], [44.340244383, 9.921813113], [44.332552613, 9.928314899], [44.327373864, 9.945643039], [44.318331429, 9.948669067], [44.299942145, 9.962757665], [44.292282381, 9.975938654], [44.272522046, 9.979804783], [44.251863109, 9.970834456], [44.226029052, 9.968081567], [44.192502597, 9.972998662], [44.180980067, 9.971129528], [44.166465804, 9.956628765], [44.141880757, 9.949702928], [44.110777034, 9.98390344], [44.087254268, 10.019432261], [44.049578265, 10.064074537], [44.049697885, 10.101721893], [44.047024573, 10.131448423], [44.012650799, 10.163888217], [43.990955754, 10.199739892], [43.954315085, 10.235210907], [43.935002173, 10.283559559], [43.903837606, 10.354549253], [43.891261598, 10.400981163], [43.853615275, 10.451432487], [43.840210162, 10.55951479], [43.831288781, 10.63617108], [43.781233254, 10.703497727], [43.743187522, 10.76307943], [43.712204546, 10.819187787], [43.674943297, 10.866519761], [43.642313414, 10.899907947], [43.596681966, 10.927918189], [43.563351273, 10.95013948], [43.5133429, 10.995327925], [43.467520864, 11.044931731], [43.487413783, 11.069384625], [43.473147104, 11.103447216], [43.462831477, 11.137569983], [43.401994573, 11.138965089], [43.38580029, 11.211261824], [43.378550359, 11.230508626], [43.350669009, 11.249620218], [43.321886036, 11.254230513], [43.326144569, 11.294888364], [43.310613368, 11.345859247], [43.277936978, 11.376990385], [43.242696774, 11.394802036], [43.203145893, 11.430422628], [43.153129327, 11.480373473], [43.099691083, 11.497532438], [43.080012671, 11.529983036], [43.077593646, 11.570520976], [43.059173513, 11.59887905], [43.028004851, 11.62407166], [43.00018043, 11.626350899], [42.976632024, 11.693760342], [42.918979249, 11.740935507], [42.849759077, 11.792289169], [42.749607364, 11.863235274], [42.685507483, 11.913363231], [42.645141578, 11.986219472], [42.64338983, 11.988817112]] },
 ];
 
 const sites = [
@@ -507,7 +560,10 @@ const latinNames = {
   "Cales": "Cales", "Suessula": "Suessula",
   "Cubulteria": "Cubulteria", "Compsa": "Compsa",
   "Volceii": "Volceii", "Forum Popilii": "Forum Popilii",
-  "Atina": "Atina", "Grumentum": "Grumentum", "Blanda": "Blanda"
+   "Atina": "Atina", "Grumentum": "Grumentum", "Blanda": "Blanda",
+   "Nicaea": "Nicaea", "Mystras": "Mystras", "Trebisonda": "Trapezus",
+   "Arta": "Arta", "Mistra": "Mistra", "Ani": "Ani",
+   "Edessa": "Edessa", "Cafa": "Cafa", "Cherson": "Chersonesus"
 };
 const pop = {
   "Roma": 1000000, "Costantinopoli": 400000, "Alessandria": 500000, "Antiochia": 350000,
@@ -551,8 +607,11 @@ const pop = {
   "Minturnae": 12000, "Sinuessa": 8000,
   "Cales": 10000, "Suessula": 8000,
   "Cubulteria": 5000, "Compsa": 6000,
-  "Volceii": 5000, "Forum Popilii": 5000,
-  "Atina": 5000, "Grumentum": 8000, "Blanda": 6000
+   "Volceii": 5000, "Forum Popilii": 5000,
+   "Atina": 5000, "Grumentum": 8000, "Blanda": 6000,
+   "Nicaea": 50000, "Mystras": 20000, "Trebisonda": 40000,
+   "Arta": 15000, "Mistra": 20000, "Ani": 100000,
+   "Edessa": 30000, "Cafa": 25000, "Cherson": 15000
 };
 const dynasties = [
   { name: "Regno di Roma", start: -753, end: -509, color: "#e94560" },
@@ -566,6 +625,17 @@ const dynasties = [
   { name: "Dinastia Costantiniana", start: 313, end: 363, color: "#0fb9b1" },
   { name: "Dinastia Valentiniana", start: 364, end: 395, color: "#4ecca3" },
   { name: "Impero Romano d'Occidente", start: 395, end: 476, color: "#e94560" },
+  { name: "Impero Romano d'Oriente", start: 476, end: 1453, color: "#a855f7" },
+  { name: "Dinastia Teodosiana (Oriente)", start: 476, end: 518, color: "#a855f7" },
+  { name: "Dinastia Giustinianea", start: 518, end: 602, color: "#7c3aed" },
+  { name: "Dinastia Eracliana", start: 610, end: 711, color: "#8b5cf6" },
+  { name: "Dinastia Isaurica", start: 717, end: 802, color: "#a78bfa" },
+  { name: "Dinastia Amoriana", start: 820, end: 867, color: "#c084fc" },
+  { name: "Dinastia Macedone", start: 867, end: 1056, color: "#e879f9" },
+  { name: "Dinastia Comnena", start: 1081, end: 1185, color: "#d946ef" },
+  { name: "Dinastia Angeliana", start: 1185, end: 1204, color: "#e94560" },
+  { name: "Impero Latino d'Oriente", start: 1204, end: 1261, color: "#ef4444" },
+  { name: "Dinastia Paleologa", start: 1261, end: 1453, color: "#f59e0b" },
 ];
 
 const bibliography = [
@@ -584,6 +654,12 @@ const bibliography = [
   { title: "La seconda guerra cartaginese", url: "https://docenti.unisa.it/uploads/rescue/385/2860/bontempelli-bruni-la-seconda-guerra-cartaginese-uso-didattico.pdf", note: "Bontempelli-Bruni" },
   { title: "La rivolta servile di Spartaco", url: "https://docenti.unisa.it/uploads/rescue/385/2860/bontempelli-bruni-la-rivolta-servile-di-spartaco-uso-didattico.pdf", note: "Bontempelli-Bruni" },
   { title: "L'Arco di Traiano a Benevento", url: "https://docenti.unisa.it/uploads/rescue/385/2860/appunti-storia-romana-trienn-2019-10-arco-traiano-bn.pdf", note: "UNISA - Lezione monografica" },
+  { title: "Itiner-e — Mappa digitale delle strade dell'Impero Romano", url: "https://www.itiner-e.org", note: "Dataset CC BY 4.0 — 299.000 km di strade" },
+  { title: "Itiner-e su Nature Scientific Data (2025)", url: "https://doi.org/10.1038/s41597-025-06140-z", note: "de Soto, Pažout, Brughmans et al. — DOI: 10.1038/s41597-025-06140-z" },
+  { title: "Itiner-e — Dataset statico 2024 (Zenodo)", url: "https://doi.org/10.5281/zenodo.17122148", note: "GeoJSON 78MB — Scarica il dataset completo" },
+  { title: "Via Francigena in Toscana (tracciato GPX)", url: "https://www.hikingtuscany.com/it/via-francigena/", note: "Percorso della Via Francigena nel tratto toscano" },
+  { title: "Strade Romane — Catalogo delle strade", url: "https://www.straderomane.it/it/le-strade/", note: "Gruppo Amici delle Strade Romane — Oltre 80 itinerari" },
+  { title: "Straderomane — Mappa interattiva (uMap)", url: "https://umap.openstreetmap.fr/it/map/straderomane_682640", note: "Percorsi GPS delle strade romane" },
 ];
 
 const romanEvents = [
@@ -597,54 +673,87 @@ const romanEvents = [
   { year: -494, event: "Prima secessione della plebe — Istituzione tribuni della plebe" },
   { year: -493, event: "Foedus Cassianum — Trattato di alleanza con i Latini" },
   { year: -451, event: "Leggi delle XII Tavole — Prime leggi scritte di Roma" },
+  { year: -445, event: "Lex Canuleia — Consentiti i matrimoni tra patrizi e plebei" },
   { year: -396, event: "Conquista di Veio — Roma espande il dominio in Etruria" },
   { year: -390, event: "Sacco di Roma da parte dei Galli Senoni" },
   { year: -367, event: "Leggi Licinie-Sestie — Patrizi e plebei condividono il consolato" },
+  { year: -338, event: "Roma scioglie la Lega Latina — Controllo diretto sul Lazio" },
+  { year: -326, event: "Lex Poetelia-Papiria — Abolita la schiavitù per debiti" },
   { year: -312, event: "Inizio costruzione della Via Appia" },
   { year: -343, event: "Inizio guerre sannitiche" },
+  { year: -300, event: "Lex Ogulnia — Plebei ammessi ai collegi sacerdotali" },
   { year: -290, event: "Fine guerre sannitiche — Roma domina l'Italia centrale" },
   { year: -275, event: "Battaglia di Benevento — Pirro lascia l'Italia" },
   { year: -264, event: "Inizio Prima Guerra Punica" },
   { year: -260, event: "Battaglia di Milazzo — Prima vittoria navale romana" },
   { year: -241, event: "Fine Prima Guerra Punica — Roma conquista Sicilia" },
+  { year: -240, event: "📖 Livio Andronico — Odusia (prima opera letteraria latina)" },
   { year: -238, event: "Annessione di Sardegna e Corsica" },
+  { year: -235, event: "📖 Gneo Nevio — Bellum Punicum (poema epico)" },
   { year: -218, event: "Annibale attraversa le Alpi — Inizio II Guerra Punica" },
   { year: -216, event: "Battaglia di Canne" },
+  { year: -204, event: "📖 Quinto Ennio — Annales (poema epico nazionale)" },
   { year: -202, event: "Battaglia di Zama — Sconfitta di Annibale" },
   { year: -197, event: "La Spagna diventa provincia romana" },
+  { year: -195, event: "📖 Plauto — Mostellaria (commedia)" },
   { year: -168, event: "Battaglia di Pidna — Fine del regno di Macedonia" },
+  { year: -160, event: "📖 Terenzio — Adelphoe (commedia)" },
+  { year: -149, event: "📖 Catone il Censore — De Agri Cultura (più antica prosa latina)" },
   { year: -149, event: "Inizio III Guerra Punica" },
   { year: -146, event: "Distruzione di Cartagine e Corinto — Roma egemone del Mediterraneo" },
   { year: -133, event: "Riforme dei Gracchi e morte di Attalo III — Asia provincia" },
   { year: -107, event: "Riforma mariana dell'esercito — Esercito professionale" },
   { year: -91, event: "Guerra sociale — Gli italici chiedono la cittadinanza" },
   { year: -82, event: "Dittatura di Lucio Cornelio Silla — Proscrizioni e riforme" },
+  { year: -81, event: "📖 Cicerone — Pro Quinctio (prima orazione forense)" },
   { year: -73, event: "Rivolta di Spartaco" },
+  { year: -60, event: "📖 Catullo — Carmina (poesia lirica latina)" },
   { year: -60, event: "Primo Triumvirato — Cesare, Pompeo, Crasso" },
   { year: -58, event: "Cesare inizia la conquista della Gallia" },
+  { year: -54, event: "📖 Lucrezio — De Rerum Natura (poema filosofico)" },
+  { year: -52, event: "📖 Cicerone — De Republica (dialogo politico)" },
   { year: -52, event: "Battaglia di Alesia — Vercingetorige sconfitto" },
   { year: -49, event: "Cesare varca il Rubicone — Inizio guerra civile" },
+  { year: -44, event: "📖 Sallustio — De Catilinae Coniuratione" },
+  { year: -44, event: "📖 Cicerone — Filippiche, De Officiis (ultime opere)" },
   { year: -44, event: "Assassinio di Giulio Cesare alle Idi di Marzo" },
   { year: -43, event: "Secondo Triumvirato — Ottaviano, Antonio, Lepido" },
+  { year: -37, event: "📖 Virgilio — Bucoliche (Egloghe)" },
   { year: -31, event: "Battaglia di Azio — Ottaviano sconfigge Antonio e Cleopatra" },
   { year: -30, event: "Morte di Cleopatra — Egitto diventa provincia romana" },
+  { year: -29, event: "📖 Virgilio — Georgiche" },
   { year: -27, event: "Augusto diventa princeps — Nascita dell'Impero" },
+  { year: -23, event: "📖 Orazio — Odi (libri I–III)" },
+  { year: -19, event: "📖 Virgilio — Eneide (pubblicata postuma)" },
+  { year: -8, event: "📖 Ovidio — Metamorfosi, Ars Amatoria" },
   { year: 6, event: "Giudea diventa provincia romana sotto prefetti" },
+  { year: 8, event: "📖 Ovidio — Tristia (dall'esilio sul Mar Nero)" },
+  { year: 9, event: "📖 Tito Livio — Ab Urbe Condita (storia di Roma in 142 libri)" },
   { year: 9, event: "Battaglia di Teutoburgo — Roma perde la Germania" },
   { year: 14, event: "Morte di Augusto — Tiberio imperatore" },
   { year: 43, event: "Conquista della Britannia (Claudio)" },
   { year: 64, event: "Grande incendio di Roma — Persecuzione dei cristiani" },
+  { year: 65, event: "📖 Seneca — Epistulae Morales ad Lucilium (filosofia stoica)" },
+  { year: 65, event: "📖 Petronio — Satyricon (romanzo satirico)" },
   { year: 66, event: "Inizio della rivolta giudaica contro Roma" },
   { year: 69, event: "Anno dei quattro imperatori — Galba, Otone, Vitellio, Vespasiano" },
   { year: 70, event: "Distruzione di Gerusalemme (Tito)" },
   { year: 79, event: "Eruzione del Vesuvio — Distruzione di Pompei ed Ercolano" },
+  { year: 95, event: "📖 Quintiliano — Institutio Oratoria (formazione dell'oratore)" },
   { year: 98, event: "Traiano imperatore — Massima espansione dell'Impero" },
+  { year: 100, event: "📖 Tacito — Agricola, Germania" },
   { year: 106, event: "Conquista della Dacia — Annessione dell'Arabia" },
+  { year: 109, event: "📖 Tacito — Historiae" },
+  { year: 110, event: "📖 Plinio il Giovane — Epistulae (libri I–X)" },
   { year: 117, event: "Morte di Traiano — Adriano imperatore" },
+  { year: 121, event: "📖 Svetonio — De Vita Caesarum (Vite dei Cesari)" },
   { year: 122, event: "Costruzione del Vallo di Adriano in Britannia" },
+  { year: 125, event: "📖 Giovenale — Satire" },
   { year: 132, event: "Rivolta di Bar Kokhba in Giudea — Ultima rivolta ebraica" },
   { year: 138, event: "Antonino Pio imperatore — Periodo di pace e prosperità" },
   { year: 161, event: "Marco Aurelio imperatore — Guerre marcomanniche" },
+  { year: 165, event: "📖 Apuleio — Metamorfosi (Asino d'oro, unico romanzo latino completo)" },
+  { year: 180, event: "📖 Marco Aurelio — Colloqui con se stesso (Meditazioni, in greco)" },
   { year: 193, event: "Anno dei cinque imperatori" },
   { year: 212, event: "Constitutio Antoniniana — Cittadinanza a tutti gli abitanti" },
   { year: 235, event: "Inizio dell'anarchia militare" },
@@ -655,54 +764,117 @@ const romanEvents = [
   { year: 293, event: "Istituzione della Tetrarchia — Due Augusti e due Cesari" },
   { year: 301, event: "Editto dei prezzi massimi di Diocleziano" },
   { year: 303, event: "Grande persecuzione di Diocleziano contro i cristiani" },
+  { year: 305, event: "Diocleziano e Massimiano abdicano — Fine della Tetrarchia" },
   { year: 306, event: "Costantino acclamato imperatore a Eboracum" },
+  { year: 361, event: "Giuliano l'Apostata imperatore — Ultimo tentativo pagano" },
   { year: 312, event: "Battaglia di Ponte Milvio — Costantino sconfigge Massenzio" },
   { year: 313, event: "Editto di Milano — Tolleranza verso i cristiani" },
   { year: 325, event: "Concilio di Nicea" },
   { year: 330, event: "Dedicazione di Costantinopoli come nuova capitale" },
   { year: 378, event: "Battaglia di Adrianopoli — Valente sconfitto dai Goti" },
   { year: 380, event: "Editto di Tessalonica — Cristianesimo religione di Stato" },
+  { year: 382, event: "Visigoti diventano foederati di Roma — Primo insediamento barbarico" },
   { year: 395, event: "Morte di Teodosio I — Divisione definitiva dell'Impero" },
+  { year: 397, event: "📖 Agostino d'Ippona — Confessioni (autobiografia spirituale)" },
   { year: 402, event: "Onorio trasferisce la capitale imperiale a Ravenna" },
   { year: 410, event: "Sacco di Roma ad opera di Alarico (Visigoti)" },
+  { year: 426, event: "📖 Agostino d'Ippona — De Civitate Dei (La città di Dio)" },
   { year: 451, event: "Battaglia dei Campi Catalaunici — Ezio sconfigge Attila" },
+  { year: 454, event: "Assassinio di Ezio — Ultimo grande generale romano d'Occidente" },
   { year: 455, event: "Sacco di Roma ad opera dei Vandali" },
-  { year: 476, event: "Deposizione di Romolo Augustolo — Fine Impero d'Occidente" }
+  { year: 476, event: "Deposizione di Romolo Augustolo — Fine Impero d'Occidente" },
+  { year: 488, event: "Teodorico re degli Ostrogoti in Italia" },
+  { year: 527, event: "Giustiniano I imperatore — Inizio della riconquista" },
+  { year: 532, event: "Rivolta di Nika a Costantinopoli — Costruzione di Hagia Sophia" },
+  { year: 533, event: "Campagna d'Africa — Belisario riconquista Cartagine" },
+  { year: 535, event: "Inizio Guerra Gotica — Belisario in Italia" },
+  { year: 537, event: "Consacrazione di Hagia Sophia a Costantinopoli" },
+  { year: 540, event: "Belisario conquista Ravenna — Fine del regno ostrogoto" },
+  { year: 550, event: "📖 Procopio di Cesarea — Storia delle guerre, Storia segreta (Anecdota)" },
+  { year: 554, event: "Prammatica Sanzione — Italia provincia bizantina" },
+  { year: 568, event: "Invasione longobarda in Italia" },
+  { year: 610, event: "Eraclio I imperatore — Riorganizzazione dell'Impero" },
+  { year: 626, event: "Assedio avaro-persiano di Costantinopoli" },
+  { year: 630, event: "📖 Teofilatto Simocatta — Storie (ultimo storico greco-romano classico)" },
+  { year: 634, event: "Inizio delle conquiste arabe — Battaglia di Ajnadayn" },
+  { year: 674, event: "Primo assedio arabo di Costantinopoli" },
+  { year: 698, event: "Caduta di Cartagine — Fine dell'Africa bizantina" },
+  { year: 717, event: "Secondo assedio arabo di Costantinopoli — Leone Isaurico" },
+  { year: 726, event: "Inizio dell'iconoclastia bizantina" },
+  { year: 800, event: "Incoronazione di Carlo Magno — Sacro Romano Impero" },
+  { year: 843, event: "Restaurazione delle icone — Trionfo dell'Ortodossia" },
+  { year: 867, event: "Inizio dinastia macedone — Rinascenza macedone" },
+  { year: 950, event: "📖 Costantino Porfirogenito — De Administrando Imperio, De Ceremoniis" },
+  { year: 988, event: "Battesimo di Vladimir — Cristianizzazione della Rus' di Kiev" },
+  { year: 1054, event: "Scisma d'Oriente — Separazione tra Chiesa cattolica e ortodossa" },
+  { year: 1071, event: "Battaglia di Manzicerta — Conquista turca dell'Anatolia" },
+  { year: 1081, event: "📖 Michele Psello — Chronographia (storia degli imperatori bizantini)" },
+  { year: 1081, event: "Alessio I Comneno imperatore — Inizio restaurazione comnena" },
+  { year: 1096, event: "Prima Crociata — Passaggio dei crociati a Costantinopoli" },
+  { year: 1147, event: "Seconda Crociata — Corrado III e Luigi VII" },
+  { year: 1148, event: "📖 Anna Comnena — Alexiade (biografia di Alessio I Comneno)" },
+  { year: 1176, event: "Battaglia di Miriocefalo — Sconfitta bizantina contro i Selgiuchidi" },
+  { year: 1189, event: "Terza Crociata — Federico Barbarossa, Filippo Augusto, Riccardo Cuor di Leone" },
+  { year: 1204, event: "Sacco di Costantinopoli — Quarta Crociata, Impero Latino" },
+  { year: 1205, event: "Impero di Nicea — Teodoro I Lascaris" },
+  { year: 1261, event: "Michele VIII Paleologo riconquista Costantinopoli" },
+  { year: 1299, event: "Nascita dell'Impero Ottomano — Osman I" },
+  { year: 1354, event: "I Turchi Ottomani conquistano Gallipoli — Primo insediamento in Europa" },
+  { year: 1369, event: "Adrianopoli diventa capitale ottomana (Edirne)" },
+  { year: 1389, event: "Battaglia del Kosovo — Avanzata ottomana nei Balcani" },
+  { year: 1396, event: "Battaglia di Nicopoli — Sconfitta crociata contro gli Ottomani" },
+  { year: 1402, event: "Battaglia di Ankara — Tamerlano sconfigge Bayezid I" },
+  { year: 1422, event: "Assedio ottomano di Costantinopoli" },
+  { year: 1444, event: "Battaglia di Varna — Sconfitta crociata di Ladislao III" },
+  { year: 1453, event: "Caduta di Costantinopoli — Maometto II conquista la città — Fine Impero Romano d'Oriente" }
 ];
 const provinces = [
-  { name: "Italia", lat: 42.0, lng: 12.5, controlled: [-753, 476] },
-  { name: "Sicilia", lat: 37.5, lng: 14.0, controlled: [-241, 476] },
-  { name: "Corsica et Sardinia", lat: 40.5, lng: 9.0, controlled: [-238, 476] },
+  { name: "Italia", lat: 42.0, lng: 12.5, controlled: [-753, 476], byzantine: [476, 568] },
+  { name: "Sicilia", lat: 37.5, lng: 14.0, controlled: [-241, 476], byzantine: [476, 965] },
+  { name: "Corsica et Sardinia", lat: 40.5, lng: 9.0, controlled: [-238, 476], byzantine: [476, 534] },
   { name: "Hispania", lat: 40.5, lng: -4.0, controlled: [-197, 476] },
   { name: "Gallia", lat: 46.5, lng: 2.5, controlled: [-50, 476] },
   { name: "Britannia", lat: 52.0, lng: -2.0, controlled: [43, 410] },
   { name: "Raetia", lat: 47.0, lng: 11.0, controlled: [-15, 476] },
   { name: "Noricum", lat: 47.5, lng: 14.0, controlled: [-15, 476] },
   { name: "Pannonia", lat: 46.5, lng: 18.0, controlled: [-9, 476] },
-  { name: "Dalmatia", lat: 43.5, lng: 17.0, controlled: [-12, 476] },
-  { name: "Moesia", lat: 43.5, lng: 23.0, controlled: [-6, 476] },
+  { name: "Dalmatia", lat: 43.5, lng: 17.0, controlled: [-12, 476], byzantine: [476, 900] },
+  { name: "Moesia", lat: 43.5, lng: 23.0, controlled: [-6, 476], byzantine: [476, 602] },
   { name: "Dacia", lat: 46.0, lng: 24.0, controlled: [106, 271] },
-  { name: "Thracia", lat: 42.0, lng: 26.0, controlled: [46, 476] },
-  { name: "Macedonia", lat: 40.5, lng: 22.0, controlled: [-146, 476] },
-  { name: "Achaea", lat: 38.0, lng: 23.0, controlled: [-146, 476] },
-  { name: "Asia", lat: 38.0, lng: 28.5, controlled: [-133, 476] },
-  { name: "Bithynia et Pontus", lat: 41.0, lng: 31.0, controlled: [-63, 476] },
-  { name: "Galatia", lat: 39.5, lng: 33.0, controlled: [-25, 476] },
-  { name: "Cappadocia", lat: 39.0, lng: 36.0, controlled: [17, 476] },
-  { name: "Cilicia", lat: 37.0, lng: 34.0, controlled: [-64, 476] },
-  { name: "Syria", lat: 35.5, lng: 37.5, controlled: [-64, 476] },
+  { name: "Thracia", lat: 42.0, lng: 26.0, controlled: [46, 476], byzantine: [476, 1204] },
+  { name: "Macedonia", lat: 40.5, lng: 22.0, controlled: [-146, 476], byzantine: [476, 1204] },
+  { name: "Achaea", lat: 38.0, lng: 23.0, controlled: [-146, 476], byzantine: [476, 1204] },
+  { name: "Asia", lat: 38.0, lng: 28.5, controlled: [-133, 476], byzantine: [476, 1071] },
+  { name: "Bithynia et Pontus", lat: 41.0, lng: 31.0, controlled: [-63, 476], byzantine: [476, 1261] },
+  { name: "Galatia", lat: 39.5, lng: 33.0, controlled: [-25, 476], byzantine: [476, 1071] },
+  { name: "Cappadocia", lat: 39.0, lng: 36.0, controlled: [17, 476], byzantine: [476, 1071] },
+  { name: "Cilicia", lat: 37.0, lng: 34.0, controlled: [-64, 476], byzantine: [476, 1080] },
+  { name: "Syria", lat: 35.5, lng: 37.5, controlled: [-64, 476], byzantine: [476, 636] },
   { name: "Iudaea", lat: 31.8, lng: 35.0, controlled: [-63, 135] },
-  { name: "Aegyptus", lat: 28.0, lng: 31.0, controlled: [-30, 476] },
-  { name: "Cyrenaica", lat: 32.0, lng: 22.0, controlled: [-74, 476] },
-  { name: "Africa", lat: 34.0, lng: 10.0, controlled: [-146, 476] },
+  { name: "Aegyptus", lat: 28.0, lng: 31.0, controlled: [-30, 476], byzantine: [476, 619] },
+  { name: "Cyrenaica", lat: 32.0, lng: 22.0, controlled: [-74, 476], byzantine: [476, 643] },
+  { name: "Africa", lat: 34.0, lng: 10.0, controlled: [-146, 476], byzantine: [533, 698] },
   { name: "Numidia", lat: 36.0, lng: 6.0, controlled: [-46, 476] },
   { name: "Mauretania", lat: 35.0, lng: 0.0, controlled: [-33, 476] },
   { name: "Germania Inferior", lat: 51.0, lng: 6.0, controlled: [85, 476] },
   { name: "Germania Superior", lat: 49.5, lng: 8.0, controlled: [85, 476] },
   { name: "Alpes", lat: 46.0, lng: 7.0, controlled: [-14, 476] },
-  { name: "Armenia", lat: 40.0, lng: 43.0, controlled: [114, 117] },
+  { name: "Armenia", lat: 40.0, lng: 43.0, controlled: [114, 117], byzantine: [578, 1071] },
   { name: "Mesopotamia", lat: 36.0, lng: 41.0, controlled: [116, 117] },
   { name: "Arabia", lat: 30.5, lng: 36.5, controlled: [106, 476] },
+  { name: "Creta", lat: 35.3, lng: 24.9, controlled: [-67, 476], byzantine: [476, 824] },
+  { name: "Cipro", lat: 35.0, lng: 33.0, controlled: [-58, 476], byzantine: [476, 965] },
+  { name: "Trebisonda", lat: 41.0, lng: 39.7, controlled: [-65, 476], byzantine: [1204, 1461] },
+  { name: "Thema Hellas", lat: 38.5, lng: 23.5, controlled: [476, 1204] },
+  { name: "Thema Thrakesion", lat: 38.0, lng: 27.5, controlled: [640, 1071] },
+  { name: "Thema Armeniakon", lat: 40.5, lng: 36.0, controlled: [640, 1071] },
+  { name: "Thema Anatolikon", lat: 39.0, lng: 31.5, controlled: [640, 1071] },
+  { name: "Thema Opsikion", lat: 40.0, lng: 29.5, controlled: [640, 1204] },
+  { name: "Thema Boukellarion", lat: 40.0, lng: 32.5, controlled: [767, 1071] },
+  { name: "Despotato di Morea", lat: 37.2, lng: 22.3, controlled: [1261, 1460] },
+  { name: "Impero di Nicea", lat: 40.2, lng: 29.5, controlled: [1204, 1261] },
+  { name: "Impero di Trebisonda", lat: 41.0, lng: 39.7, controlled: [1204, 1461] },
+  { name: "Epiro", lat: 39.6, lng: 20.8, controlled: [1205, 1479] },
 ];
 const map = L.map('map', {
   center: [40.0, 15.0],
@@ -776,7 +948,7 @@ function updateMap(year) {
       active = year >= 330;
     }
     if (city.name === "Cartagine") {
-      active = (year >= -146 && year <= 439) || (year >= -814 && year <= -146);
+      active = (year >= -146 && year <= 439) || (year >= -814 && year <= -146) || (year >= 533 && year <= 698);
       if (year >= -146 && year <= -121) active = false;
     }
 
@@ -851,12 +1023,15 @@ function updateMap(year) {
   roadGroup.clearLayers();
   if (showRoads) {
     roads.forEach(road => {
-      if (year >= road.built && year <= road.end) {
+      const roadEnd = road.byzantine_end && year > 476 ? road.byzantine_end : road.end;
+      if (year >= road.built && year <= roadEnd) {
+        const isFrancigena = road.name === "Via Francigena (Toscana)";
+        const isByzantine = road.byzantine_end && year > 476;
         const polyline = L.polyline(road.coords, {
-          color: '#c9a959',
-          weight: 2,
-          opacity: 0.5,
-          dashArray: '6, 6'
+          color: isFrancigena ? '#e94560' : (isByzantine ? '#a855f7' : '#c9a959'),
+          weight: isFrancigena ? 3 : 2,
+          opacity: isByzantine ? 0.6 : 0.5,
+          dashArray: isFrancigena ? null : (isByzantine ? null : '6, 6')
         }).addTo(roadGroup);
 
         polyline.bindPopup(`<h3>${road.name}</h3><div class="year-info"><span class="founded">Costruzione:</span> ${formatYear(road.built)}</div>`);
@@ -884,11 +1059,17 @@ function updateMap(year) {
 
   document.querySelectorAll('.province-label').forEach(el => el.remove());
   provinces.forEach(p => {
-    if (year >= p.controlled[0] && year <= p.controlled[1]) {
+    let active = false;
+    if (year >= p.controlled[0] && year <= p.controlled[1]) active = true;
+    if (!active && p.byzantine && year >= p.byzantine[0] && year <= p.byzantine[1]) active = true;
+    if (active) {
+      const isByzantine = p.byzantine && year >= p.byzantine[0] && year <= p.byzantine[1];
       const latShift = p.name === "Italia" ? 1.5 : (p.name === "Aegyptus" ? -2 : 0);
+      const labelColor = isByzantine ? '#a855f7' : '#8b949e';
+      const labelBorder = isByzantine ? 'rgba(168,85,247,0.2)' : 'rgba(139,148,158,0.15)';
       const icon = L.divIcon({
         className: 'province-label',
-        html: `<div style="font-family:'Cinzel',serif;font-size:0.6rem;color:#8b949e;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 4px #000,0 0 8px #000,0 0 12px #000;background:rgba(0,0,0,0.3);padding:1px 6px;border-radius:3px;border:1px solid rgba(139,148,158,0.15);opacity:0.5;white-space:nowrap;">${p.name}</div>`,
+        html: `<div style="font-family:'Cinzel',serif;font-size:0.6rem;color:${labelColor};text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 4px #000,0 0 8px #000,0 0 12px #000;background:rgba(0,0,0,0.3);padding:1px 6px;border-radius:3px;border:1px solid ${labelBorder};opacity:0.5;white-space:nowrap;">${p.name}</div>`,
         iconSize: [0, 0],
         iconAnchor: [0, 0]
       });
@@ -940,9 +1121,12 @@ function updateYearDisplay(year) {
   } else if (year <= -27) {
     badge.textContent = 'Repubblica';
     badge.className = 'era-badge respublica';
-  } else {
+  } else if (year <= 476) {
     badge.textContent = 'Impero';
     badge.className = 'era-badge imperium';
+  } else {
+    badge.textContent = 'Impero d\'Oriente';
+    badge.className = 'era-badge byzantium';
   }
   const dynastyEl = document.getElementById('dynasty-badge');
   let found = '';
@@ -993,6 +1177,8 @@ legend.onAdd = function() {
       <div class="legend-item"><span class="legend-icon" style="background:#a855f7;">★</span> Sito storico</div>
       <hr>
       <div class="legend-item"><span class="legend-line" style="background:#c9a959;"></span> Strada romana</div>
+      <div class="legend-item"><span class="legend-line" style="background:#e94560;height:3px;opacity:0.9;"></span> Via Francigena (medievale)</div>
+      <div class="legend-item"><span class="legend-line" style="background:#a855f7;"></span> Strada bizantina</div>
     </div>`;
   return div;
 };
@@ -1019,17 +1205,62 @@ bibPanel.addEventListener('click', (e) => { if (e.target === bibPanel) bibPanel.
 const playBtn = document.getElementById('play-btn');
 let playing = false;
 let playInterval = null;
-const SPEED = 60;
+let SPEED = 60;
+const speedBtn = document.getElementById('speed-btn');
+const speeds = [60, 30, 15, 5];
+let speedIdx = 0;
+speedBtn.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  SPEED = speeds[speedIdx];
+  speedBtn.textContent = speedIdx === 0 ? '1×' : speedIdx === 1 ? '2×' : speedIdx === 2 ? '4×' : '8×';
+});
+
+const itinereLayer = L.layerGroup().addTo(map);
+let itinereLoaded = false;
+
+document.getElementById('itinere-checkbox').addEventListener('change', function() {
+  if (this.checked) {
+    map.addLayer(itinereLayer);
+  } else {
+    map.removeLayer(itinereLayer);
+  }
+});
+
+function loadItinereData() {
+  if (itinereLoaded) return;
+  itinereLoaded = true;
+  const label = document.getElementById('itinere-label');
+  label.style.opacity = '0.5';
+  label.title = 'Caricamento dati Itiner-e in corso...';
+
+  fetch('https://zenodo.org/api/records/17122148/files/itinere_roads.geojson/content')
+    .then(r => r.json())
+    .then(geo => {
+      L.geoJSON(geo, {
+        style: { color: '#a855f7', weight: 1, opacity: 0.4 },
+        pointToLayer: () => null
+      }).addTo(itinereLayer);
+      label.style.opacity = '1';
+      label.title = `Itiner-e: ${geo.features ? geo.features.length : '?'} segmenti stradali caricati`;
+    })
+    .catch(() => {
+      label.style.opacity = '1';
+      label.title = 'Errore caricamento dati Itiner-e';
+      itinereLoaded = false;
+    });
+}
+
+setTimeout(loadItinereData, 2000);
 
 playBtn.addEventListener('click', function() {
   playing = !playing;
   this.textContent = playing ? '⏸' : '▶';
   this.classList.toggle('playing', playing);
   if (playing) {
-    if (parseInt(slider.value) >= 476) slider.value = -753;
+    if (parseInt(slider.value) >= 1453) slider.value = -753;
     playInterval = setInterval(() => {
       let y = parseInt(slider.value);
-      if (y >= 476) {
+      if (y >= 1453) {
         clearInterval(playInterval);
         playing = false;
         playBtn.textContent = '▶';
